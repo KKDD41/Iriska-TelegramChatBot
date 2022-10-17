@@ -1,1 +1,1 @@
-# Irirska-TelegramChatBot
+# iriska
