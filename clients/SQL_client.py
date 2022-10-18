@@ -27,25 +27,15 @@ class SQLiteClient:
             raise ConnectionError("There is no definition for field 'self.conn'.")
 
 
-class UserProvider:
-    CREATE_USER = """
-        INSERT INTO users(user_id, chat_id, username) VALUES (?, ?, ?);
-    """
 
-    GET_USER = """
-        SELECT user_id, chat_id, username FROM users WHERE user_id = %s;
-    """
-
-    def __init__(self, DB_client: SQLiteClient):
-        self.DB_client = DB_client
-
-    def set_up(self):
-        self.DB_client.create_conn()
-
-    def get_user(self, user_id: str):
-        user = self.DB_client.execute_select_query(self.GET_USER % user_id)
-        return user[0] if user else []
-
-    def create_user(self, user_id: str, chat_id: int, username: str):
-        self.DB_client.execute_query(self.CREATE_USER, (user_id, chat_id, username))
-
+# time_provider = TimeProvider(SQLiteClient("alarm_table.db"))
+# time_provider.set_up()
+# #
+# cn = sqlite3.connect("alarm_table.db")
+# cur = cn.cursor()
+# cur.execute("""
+#     CREATE TABLE IF NOT EXISTS alarm_table(time TEXT PRIMARY KEY, chats_to_notify TEXT);
+# """)
+#
+# cn.commit()
+# cn.close()
