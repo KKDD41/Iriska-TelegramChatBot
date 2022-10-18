@@ -1,4 +1,4 @@
-from SQL_client import SQLiteClient
+from clients.SQL_client import SQLiteClient
 
 
 class UserProvider:
@@ -26,3 +26,8 @@ class UserProvider:
 
 user_provider = UserProvider(
     SQLiteClient("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\clients\\users.db"))
+
+
+
+
+

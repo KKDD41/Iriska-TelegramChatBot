@@ -1,4 +1,6 @@
-from SQL_client import SQLiteClient
+import schedule
+from time import sleep
+from clients.SQL_client import SQLiteClient
 
 
 class TimeProvider:
@@ -13,6 +15,16 @@ class TimeProvider:
         UPDATE alarm_table SET chats_to_notify = ? WHERE time = ?;
     """
 
+    @staticmethod
+    def schedule_checker():
+        while True:
+            schedule.run_pending()
+            sleep(1)
+
+    @staticmethod
+    def schedule_work_update(curr_time: str, func_to_preform=None):
+        schedule.every().day.at(curr_time).do(func_to_preform, curr_time)
+
     def __init__(self, DB_client: SQLiteClient):
         self.DB_client = DB_client
 
@@ -20,9 +32,11 @@ class TimeProvider:
         self.DB_client.create_conn()
 
     def get_chats_to_notify(self, curr_time: str):
-        # TODO: modify a result
         to_notify = self.DB_client.execute_select_query(self.SELECT_TIME % curr_time)
-        return to_notify[0][1] if to_notify else []
+        if to_notify:
+            set_of_chats = set(map(int, to_notify[0][1].split()))
+            return set_of_chats
+        return []
 
     def update_time(self, curr_time: str, chat_id: int, remove: bool = False):
         time_str = self.DB_client.execute_select_query(self.SELECT_TIME % curr_time)

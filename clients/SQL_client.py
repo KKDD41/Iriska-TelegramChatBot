@@ -25,17 +25,3 @@ class SQLiteClient:
             return cur.fetchall()
         else:
             raise ConnectionError("There is no definition for field 'self.conn'.")
-
-
-
-# time_provider = TimeProvider(SQLiteClient("alarm_table.db"))
-# time_provider.set_up()
-# #
-# cn = sqlite3.connect("alarm_table.db")
-# cur = cn.cursor()
-# cur.execute("""
-#     CREATE TABLE IF NOT EXISTS alarm_table(time TEXT PRIMARY KEY, chats_to_notify TEXT);
-# """)
-#
-# cn.commit()
-# cn.close()

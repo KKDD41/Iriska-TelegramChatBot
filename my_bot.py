@@ -1,10 +1,11 @@
 import telebot as tb
 from envparse import Env
-from clients.SQL_client import SQLiteClient
+from threading import Thread
+
+# TODO: Create a normal structure!!!
 from clients.telegram_client import TelegramClient
 from clients.time_provider import TimeProvider, time_provider
 from clients.user_provider import UserProvider, user_provider
-
 
 env = Env()
 TOKEN = env.str("TOKEN")
@@ -24,11 +25,11 @@ class MyBot(tb.TeleBot):
         self.time_provider.set_up()
 
     def start_polling(self, *args, **kwargs):
+        Thread(target=self.time_provider.schedule_checker).start()
         self.polling(*args, **kwargs)
 
 
 telegram_client = TelegramClient(TOKEN, base_url="https://api.telegram.org/")
-
 bot = MyBot(token=TOKEN,
             client=telegram_client,
             provider_user=user_provider,
@@ -38,8 +39,6 @@ bot.setup_res()
 
 @bot.message_handler(commands=["hello"])
 def registration(message: tb.types.Message):
-    print(message)
-
     user_id = message.from_user.id
     chat_id = message.chat.id
     username = message.from_user.username
@@ -56,15 +55,21 @@ def registration(message: tb.types.Message):
 
 @bot.message_handler(commands=["new_alarm"])
 def add_alarm(message: tb.types.Message):
-    bot.time_provider.update_time(curr_time=message.text[11: 16], chat_id=message.chat.id)
-    bot.reply_to(message, text=f"Будильник установлен на {message.text[11: 16]}.")
+    curr_time = message.text[11: 16]
+    bot.time_provider.update_time(curr_time, chat_id=message.chat.id)
+    bot.time_provider.schedule_work_update(curr_time, scheduled_message)
+    bot.reply_to(message, text=f"Будильник установлен на {curr_time}.")
 
 
 @bot.message_handler(commands=["delete_alarm"])
 def delete_alarm(message: tb.types.Message):
-    bot.time_provider.update_time(curr_time=message.text[14: 19], chat_id=message.chat.id, remove=True)
-    bot.reply_to(message, text=f"Будильник на {message.text[14: 19]} удален.")
+    curr_time = message.text[14: 19]
+    bot.time_provider.update_time(curr_time, chat_id=message.chat.id, remove=True)
+    bot.time_provider.schedule_work_update(curr_time, scheduled_message)
+    bot.reply_to(message, text=f"Будильник на {curr_time} удален.")
 
 
-
-
+def scheduled_message(curr_time: str):
+    chats_to_notify = bot.time_provider.get_chats_to_notify(curr_time)
+    for chat in chats_to_notify:
+        bot.send_message(chat, text="Пора спать!")
