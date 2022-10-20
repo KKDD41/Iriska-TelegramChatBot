@@ -26,7 +26,7 @@ class MyBot(tb.TeleBot):
 
     def start_polling(self, *args, **kwargs):
         Thread(target=self.time_provider.schedule_checker).start()
-        self.polling(*args, **kwargs)
+        self.polling(non_stop=True, *args, **kwargs)
 
 
 telegram_client = TelegramClient(TOKEN, base_url="https://api.telegram.org/")
@@ -56,20 +56,20 @@ def registration(message: tb.types.Message):
 @bot.message_handler(commands=["new_alarm"])
 def add_alarm(message: tb.types.Message):
     curr_time = message.text[11: 16]
-    bot.time_provider.update_time(curr_time, chat_id=message.chat.id)
-    bot.time_provider.schedule_work_update(curr_time, scheduled_message)
+    if bot.time_provider.update_time(curr_time, chat_id=message.chat.id) is not None:
+        bot.time_provider.schedule_work_update(curr_time, scheduled_message, update='add')
     bot.reply_to(message, text=f"Будильник установлен на {curr_time}.")
 
 
 @bot.message_handler(commands=["delete_alarm"])
 def delete_alarm(message: tb.types.Message):
     curr_time = message.text[14: 19]
-    bot.time_provider.update_time(curr_time, chat_id=message.chat.id, remove=True)
-    bot.time_provider.schedule_work_update(curr_time, scheduled_message)
+    if bot.time_provider.update_time(curr_time=curr_time, chat_id=message.chat.id, remove=True) is not None:
+        bot.time_provider.schedule_work_update(curr_time, scheduled_message, update='remove')
     bot.reply_to(message, text=f"Будильник на {curr_time} удален.")
 
 
 def scheduled_message(curr_time: str):
     chats_to_notify = bot.time_provider.get_chats_to_notify(curr_time)
     for chat in chats_to_notify:
-        bot.send_message(chat, text="Пора спать!")
+        bot.send_message(chat_id=chat, text="Пора спать!")

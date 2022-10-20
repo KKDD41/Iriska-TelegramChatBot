@@ -9,9 +9,10 @@ class SQLiteClient:
     def create_conn(self):
         self.conn = sqlite3.connect(self.filepath, check_same_thread=False)
 
-    def execute_query(self, command: str, params: tuple):
+    def execute_query(self, command: str, params: tuple = ()):
         if self.conn is not None:
             # TODO: if commend and params are valid and if the user_id exists
+            print("HAHAHA")
             self.conn.execute(command, params)
             self.conn.commit()
         else:
