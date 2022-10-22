@@ -1,10 +1,6 @@
 from time_provider import TimeProvider
 from user_provider import UserProvider
+from clients import TelegramClient
 
 
-__all__ = ("TimeProvider", "UserProvider")
-# import os
-# import sys
-# fpath = os.path.join(os.path.dirname("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\providers"), 'providers')
-# sys.path.append(fpath)
-# print(sys.path)
+__all__ = ("TelegramClient", "TimeProvider", "UserProvider")

@@ -1,11 +1,7 @@
 import telebot as tb
 from envparse import Env
 from threading import Thread
-
-# TODO: Create a normal structure!!!
-from clients.telegram_client import TelegramClient
-from clients.time_provider import TimeProvider, time_provider
-from clients.user_provider import UserProvider, user_provider
+from providers import TimeProvider, UserProvider, TelegramClient
 
 env = Env()
 TOKEN = env.str("TOKEN")
@@ -28,6 +24,9 @@ class MyBot(tb.TeleBot):
         Thread(target=self.time_provider.schedule_checker).start()
         self.polling(non_stop=True, *args, **kwargs)
 
+
+user_provider = UserProvider("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\users.db")
+time_provider = TimeProvider("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\alarm_table.db")
 
 telegram_client = TelegramClient(TOKEN, base_url="https://api.telegram.org/")
 bot = MyBot(token=TOKEN,

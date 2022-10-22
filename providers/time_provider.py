@@ -1,6 +1,6 @@
 import schedule
 from time import sleep
-from clients.SQL_client import SQLiteClient
+from clients import SQLiteClient
 
 
 class TimeProvider:
@@ -23,8 +23,8 @@ class TimeProvider:
             schedule.run_pending()
             sleep(1)
 
-    def __init__(self, DB_client: SQLiteClient):
-        self.DB_client = DB_client
+    def __init__(self, filepath: str):
+        self.DB_client = SQLiteClient(filepath)
         self.job_dict = {}
 
     def set_up(self):
@@ -44,6 +44,7 @@ class TimeProvider:
                 self.DB_client.execute_query(self.ADD_TIME, (curr_time, str(chat_id) + " "))
                 return 'add'
             else:
+                # TODO: without sets, sets were stupid idea!
                 all_chats = set(map(int, time_str[0][1].split()))
                 if chat_id not in all_chats:
                     self.DB_client.execute_query(self.UPDATE_TIME, (time_str[0][1] + str(chat_id) + " ", curr_time))
@@ -71,5 +72,4 @@ class TimeProvider:
         print(self.job_dict)
 
 
-time_provider = TimeProvider(
-    SQLiteClient("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\clients\\alarm_table.db"))
+

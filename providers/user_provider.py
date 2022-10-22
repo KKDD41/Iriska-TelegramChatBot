@@ -1,4 +1,4 @@
-from clients.SQL_client import SQLiteClient
+from clients import SQLiteClient
 
 
 class UserProvider:
@@ -10,8 +10,8 @@ class UserProvider:
         SELECT user_id, chat_id, username FROM users WHERE user_id = %s;
     """
 
-    def __init__(self, DB_client: SQLiteClient):
-        self.DB_client = DB_client
+    def __init__(self, filepath: str):
+        self.DB_client = SQLiteClient(filepath)
 
     def set_up(self):
         self.DB_client.create_conn()
@@ -24,8 +24,6 @@ class UserProvider:
         self.DB_client.execute_query(self.CREATE_USER, (user_id, chat_id, username))
 
 
-user_provider = UserProvider(
-    SQLiteClient("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\clients\\users.db"))
 
 
 
