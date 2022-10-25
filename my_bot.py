@@ -9,8 +9,11 @@ ADMIN_CHAT_ID = env.int("ADMIN_CHAT_ID")
 
 
 class MyBot(tb.TeleBot):
-    def __init__(self, client: TelegramClient, provider_user: UserProvider, provider_time: TimeProvider, *args,
-                 **kwargs):
+    def __init__(self,
+                 client: TelegramClient,
+                 provider_user: UserProvider,
+                 provider_time: TimeProvider = None,
+                 *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.telegram_client = client
         self.user_provider = provider_user
@@ -18,16 +21,27 @@ class MyBot(tb.TeleBot):
 
     def setup_res(self):
         self.user_provider.set_up()
-        self.time_provider.set_up()
+        if self.time_provider is not None:
+            self.time_provider.set_up()
 
     def start_polling(self, *args, **kwargs):
-        Thread(target=self.time_provider.schedule_checker).start()
+        if self.time_provider is not None:
+            Thread(target=self.time_provider.schedule_checker).start()
         self.polling(non_stop=True, *args, **kwargs)
 
+    def scheduled_alarm(self, curr_time: str):
+        if bot.time_provider is None:
+            raise ConnectionError("Alarm function is currently unavailable.")
 
-user_provider = UserProvider("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\users.db")
-time_provider = TimeProvider("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\alarm_table.db")
+        chats_to_notify = self.time_provider.get_chats_to_notify(curr_time)
+        for chat, message in chats_to_notify:
+            self.send_message(chat_id=chat, text=message)
+            if message != "Как Ваши дела?":
+                self.send_message(chat_id=chat, text="Все ли у Вас в порядке?")
 
+
+user_provider = UserProvider("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\databases\\users.db")
+time_provider = TimeProvider("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\databases\\alarm.db")
 telegram_client = TelegramClient(TOKEN, base_url="https://api.telegram.org/")
 bot = MyBot(token=TOKEN,
             client=telegram_client,
@@ -54,21 +68,29 @@ def registration(message: tb.types.Message):
 
 @bot.message_handler(commands=["new_alarm"])
 def add_alarm(message: tb.types.Message):
+    if bot.time_provider is None:
+        raise ConnectionError("Alarm function is currently unavailable.")
+
     curr_time = message.text[11: 16]
-    if bot.time_provider.update_time(curr_time, chat_id=message.chat.id) is not None:
-        bot.time_provider.schedule_work_update(curr_time, scheduled_message, update='add')
+    curr_message = message.text[16:]
+    if not curr_message:
+        curr_message = "Как Ваши дела?"
+    bot.time_provider.update_time(curr_time=curr_time,
+                                  chat_id=message.chat.id,
+                                  message=curr_message,
+                                  bot=bot)
     bot.reply_to(message, text=f"Будильник установлен на {curr_time}.")
 
 
 @bot.message_handler(commands=["delete_alarm"])
 def delete_alarm(message: tb.types.Message):
+    if bot.time_provider is None:
+        raise ConnectionError("Alarm function is currently unavailable.")
+
     curr_time = message.text[14: 19]
-    if bot.time_provider.update_time(curr_time=curr_time, chat_id=message.chat.id, remove=True) is not None:
-        bot.time_provider.schedule_work_update(curr_time, scheduled_message, update='remove')
+    bot.time_provider.update_time(curr_time=curr_time,
+                                  chat_id=message.chat.id,
+                                  bot=bot,
+                                  remove=True)
     bot.reply_to(message, text=f"Будильник на {curr_time} удален.")
 
-
-def scheduled_message(curr_time: str):
-    chats_to_notify = bot.time_provider.get_chats_to_notify(curr_time)
-    for chat in chats_to_notify:
-        bot.send_message(chat_id=chat, text="Пора спать!")
