@@ -2,6 +2,7 @@ import telebot as tb
 from envparse import Env
 from threading import Thread
 from providers import TimeProvider, UserProvider, TelegramClient
+from text_processing import ModelLoader
 
 env = Env()
 TOKEN = env.str("TOKEN")
@@ -13,11 +14,13 @@ class MyBot(tb.TeleBot):
                  client: TelegramClient,
                  provider_user: UserProvider,
                  provider_time: TimeProvider = None,
+                 model_loader: ModelLoader = None,
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.telegram_client = client
         self.user_provider = provider_user
         self.time_provider = provider_time
+        self.nlp_model = model_loader
 
     def setup_res(self):
         self.user_provider.set_up()
@@ -43,10 +46,12 @@ class MyBot(tb.TeleBot):
 user_provider = UserProvider("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\databases\\users.db")
 time_provider = TimeProvider("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\databases\\alarm.db")
 telegram_client = TelegramClient(TOKEN, base_url="https://api.telegram.org/")
+nlp_model_loader = ModelLoader()
 bot = MyBot(token=TOKEN,
             client=telegram_client,
             provider_user=user_provider,
-            provider_time=time_provider)
+            provider_time=time_provider,
+            model_loader=nlp_model_loader)
 bot.setup_res()
 
 
@@ -94,3 +99,7 @@ def delete_alarm(message: tb.types.Message):
                                   remove=True)
     bot.reply_to(message, text=f"Будильник на {curr_time} удален.")
 
+
+@bot.message_handler(content_types=["text"])
+def get_text_message(message: tb.types.Message):
+    bot.send_message(chat_id=message.chat.id, text=bot.nlp_model.get_response(message.text))
