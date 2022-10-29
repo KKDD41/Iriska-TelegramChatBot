@@ -49,10 +49,3 @@ class ModelLoader:
         for i in list_of_intents:
             if i["tag"] == tag:
                 return random.choice(i["response"])
-
-# while True:
-#     message = input("")
-#     inst = predict_class(message)
-#     print(inst)
-#     res = get_response(inst, intents)
-#     print(res)

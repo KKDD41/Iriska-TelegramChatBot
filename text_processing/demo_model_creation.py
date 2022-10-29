@@ -5,11 +5,15 @@ import numpy as np
 import os
 from keras.layers import Dense, Dropout
 from keras.optimizers import SGD
-import ru_core_news_md
+# import ru_core_news_md
 from keras.models import Sequential
 
-nlp = ru_core_news_md.load()
+from nltk import word_tokenize
+from nltk.stem import WordNetLemmatizer
 
+# nlp = ru_core_news_md.load()
+
+lemmatizer = WordNetLemmatizer()
 invalid = ["!", "?", ",", ".", "-", "_"]
 
 words = set()
@@ -18,12 +22,16 @@ documents = []
 
 
 def clean_up_sentence(sentence: str):
-    init_sentence = nlp(sentence)
-    return [token.lemma_ for token in init_sentence if token.lemma_ not in invalid]
+    return [lemmatizer.lemmatize(t.lower()) for t in word_tokenize(sentence) if t not in invalid]
+
+    # TODO: smth for russian language is not working
+    # init_sentence = nlp(sentence)
+    # return [token.lemma_ for token in init_sentence if token.lemma_ not in invalid]
 
 
 def preprocessing():
-    intents = json.loads(open("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\text_processing\\test_data.json").read())
+    intents = json.loads(open("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\text_processing\\test_data"
+                              ".json").read())
 
     for intent in intents["intents"]:
         for pattern in intent["patterns"]:
@@ -55,8 +63,6 @@ def create_bag_of_words():
         output_row[classes.index(doc[1])] = 1
         training.append([bag, output_row])
 
-    for l in training:
-        print(l)
     return training
 
 
@@ -90,6 +96,6 @@ if __name__ == "__main__":
         os.remove("classes.pkl")
         os.remove("model_prototype.h5")
     except Exception as error:
-        pass
+        print("Model rewriting")
     finally:
         create_model()
