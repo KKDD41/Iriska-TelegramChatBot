@@ -1,51 +1,49 @@
-from keras.models import load_model
-import json
-import pickle
 import random
-import numpy as np
+import json
+import torch
 import os
-from demo_model_creation import create_model, clean_up_sentence
+from nlp_model import NeuralNet
+from nlp_utils import bag_of_words, tokenize
+from train import train_model
 
 
 class ModelLoader:
-
     def __init__(self):
-        if not os.path.exists("model_prototype.h5"):
-            create_model()
-        self.words = pickle.load(open("words.pkl", "rb"))
-        self.classes = pickle.load(open("classes.pkl", "rb"))
-        self.intents = json.loads(open("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\text_processing"
-                                       "\\test_data.json").read())
-        self.model = load_model("model_prototype.h5")
+        if not os.path.exists("text_processing/data.pth"):
+            print("Obuchaem zanovo")
+            train_model()
 
-    def __bag_of_words(self, sentence: str):
-        temp_words = clean_up_sentence(sentence)
-        bag = [0] * len(self.words)
-        for w in temp_words:
-            for i, word in enumerate(self.words):
-                if w == word:
-                    bag[i] = 1
-        return np.array(bag)
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+        data = torch.load("text_processing/data.pth")
+        self.intents = json.loads(open('text_processing/intents.json').read())
+
+        self.words = data['all_words']
+        self.classes = data['tags']
+
+        self.model = NeuralNet(data["input_size"], data["hidden_size"], data["output_size"]).to(self.device)
+        self.model.load_state_dict(data["model_state"])
+        self.model.eval()
 
     def __predict_class(self, sentence: str):
-        bow = self.__bag_of_words(sentence)
-        res = self.model.predict(np.array([bow]))[0]
+        sentence = tokenize(sentence)
+        X = bag_of_words(sentence, self.words)
+        X = X.reshape(1, X.shape[0])
+        X = torch.from_numpy(X).to(self.device)
 
-        result = [[i, r] for i, r in enumerate(res) if r > 0.25]
-        result.sort(key=lambda x: x[1], reverse=True)
-        res_list = []
-        for r in result:
-            res_list.append({"intent": self.classes[r[0]], "probability": str(r[1])})
+        output = self.model(X)
+        _, predicted = torch.max(output, dim=1)
 
-        return res_list
+        tag = self.classes[predicted.item()]
+        probs = torch.softmax(output, dim=1)
 
-    def get_response(self, sentence):
-        intent_list = self.__predict_class(sentence)
-        tag = intent_list[0]["intent"]
-        list_of_intents = self.intents["intents"]
+        return tag, probs[0][predicted.item()]
 
-        print(intent_list)
-        print(list_of_intents)
-        for i in list_of_intents:
-            if i["tag"] == tag:
-                return random.choice(i["response"])
+    def get_response(self, sentence: str):
+        tag, prob = self.__predict_class(sentence)
+        if prob.item() > 0.75:
+            for intent in self.intents['intents']:
+                if tag == intent["tag"]:
+                    return random.choice(intent['responses'])
+        else:
+            return "Не совсем поняла фразу"
