@@ -21,7 +21,7 @@ class ChatDataset(Dataset):
 
 
 def collect_training_data():
-    with open('text_processing/intents.json', 'r') as f:
+    with open('./text_processing/nlp_resources_files/intents.json', 'r') as f:
         intents = json.load(f)
 
     all_words = []
@@ -97,7 +97,7 @@ def train_model():
         "tags": tags
     }
 
-    FILE = "data.pth"
+    FILE = "./text_processing/nlp_resources_files/data.pth"
     torch.save(data, FILE)
 
     print(f'training complete. file saved to {FILE}')

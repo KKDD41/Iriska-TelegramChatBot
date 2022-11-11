@@ -7,16 +7,19 @@ from nlp_utils import bag_of_words, tokenize
 from train import train_model
 
 
-class ModelLoader:
+class ModelClient:
+    RELAPSE_POLL_OPTIONS = []
+    DEPRESSION_POLL_OPTIONS = []
+
     def __init__(self):
-        if not os.path.exists("text_processing/data.pth"):
-            print("Obuchaem zanovo")
+        if not os.path.exists("text_processing/nlp_resources_files/data.pth"):
+            print("Model training")
             train_model()
 
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-        data = torch.load("text_processing/data.pth")
-        self.intents = json.loads(open('text_processing/intents.json').read())
+        data = torch.load("text_processing/nlp_resources_files/data.pth")
+        self.intents = json.loads(open('text_processing/nlp_resources_files/intents.json').read())
 
         self.words = data['all_words']
         self.classes = data['tags']
@@ -24,6 +27,12 @@ class ModelLoader:
         self.model = NeuralNet(data["input_size"], data["hidden_size"], data["output_size"]).to(self.device)
         self.model.load_state_dict(data["model_state"])
         self.model.eval()
+
+    def set_up(self, fp_depression_criteria: str, fp_relapse_criteria: str):
+        with open(fp_relapse_criteria) as fr:
+            self.RELAPSE_POLL_OPTIONS = fr.readlines()
+        with open(fp_depression_criteria) as fr:
+            self.DEPRESSION_POLL_OPTIONS = fr.readlines()
 
     def __predict_class(self, sentence: str):
         sentence = tokenize(sentence)
@@ -42,6 +51,10 @@ class ModelLoader:
     def get_response(self, sentence: str):
         tag, prob = self.__predict_class(sentence)
         if prob.item() > 0.75:
+            if tag == "relapse test":
+                return "relapse test send"
+            elif tag == "depression test":
+                return "depression test send"
             for intent in self.intents['intents']:
                 if tag == intent["tag"]:
                     return random.choice(intent['responses'])

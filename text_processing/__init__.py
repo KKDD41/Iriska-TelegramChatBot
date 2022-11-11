@@ -1,3 +1,3 @@
-from NLPModel_loader import ModelLoader
+from NLPModel_client import ModelClient
 
-__all__ = ["ModelLoader"]
+__all__ = ("ModelClient", )
