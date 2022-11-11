@@ -29,3 +29,6 @@ class SQLiteClient:
                 raise error.__class__("Command in 'SQLClient.execute_select_query' is invalid.")
         else:
             raise ConnectionError("There is no definition for field 'self.conn'.")
+
+
+

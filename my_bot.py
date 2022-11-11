@@ -69,6 +69,7 @@ def registration(message: tb.types.Message):
     create_user = False
 
     if not user:
+        print("Start creating user!")
         bot.user_provider.create_user(user_id=str(user_id), chat_id=chat_id, username=username)
         create_user = True
     bot.reply_to(message=message, text=f"Вы {'уже' if not create_user else ''} "
@@ -105,10 +106,13 @@ def delete_alarm(message: tb.types.Message):
 
 
 @bot.poll_answer_handler()
-def answers(pollAnswers: tb.types.PollAnswer):
-    # TODO: Count positive answers and return a result
-    print(pollAnswers.option_ids)
-    return
+def dp_answers(poll_answers: tb.types.PollAnswer):
+    bot.user_provider.update_test(str(poll_answers.user.id), dp_results=str(len(poll_answers.option_ids)))
+
+
+@bot.poll_answer_handler()
+def rl_answers(poll_answers: tb.types.PollAnswer):
+    bot.user_provider.update_test(str(poll_answers.user.id), rl_results=str(len(poll_answers.option_ids)))
 
 
 @bot.message_handler(content_types=["text"])
@@ -124,13 +128,13 @@ def get_text_message(message: tb.types.Message):
                           options=bot.nlp_model.RELAPSE_POLL_OPTIONS,
                           allows_multiple_answers=True,
                           is_anonymous=False)
-            bot.poll_answer_handler(answers)
+            bot.poll_answer_handler(rl_answers)
         elif response == "depression test send":
             bot.send_poll(chat_id=message.chat.id,
                           question="Тест на симптоматику депрессивного эпизода:",
                           options=bot.nlp_model.DEPRESSION_POLL_OPTIONS,
                           allows_multiple_answers=True,
                           is_anonymous=False)
-            bot.poll_answer_handler(answers)
+            bot.poll_answer_handler(dp_answers)
         else:
             bot.send_message(chat_id=message.chat.id, text=response)
