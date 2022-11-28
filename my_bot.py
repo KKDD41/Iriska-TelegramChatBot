@@ -23,11 +23,11 @@ class MyBot(tb.TeleBot):
         self.nlp_model = model_client
 
     def setup_res(self):
-        self.user_provider.set_up()
-        if self.nlp_model is not None:
-            self.nlp_model.set_up(fp_relapse_criteria="./text_processing/nlp_resources_files/relapse_poll_options.txt",
+        self.user_provider.set_up(fp_relapse_criteria="./text_processing/nlp_resources_files/relapse_poll_options.txt",
                                   fp_depression_criteria="./text_processing/nlp_resources_files"
                                                          "/depression_poll_options.txt")
+        if self.nlp_model is not None:
+            self.nlp_model.set_up()
         if self.time_provider is not None:
             self.time_provider.set_up()
 
@@ -37,7 +37,7 @@ class MyBot(tb.TeleBot):
         self.polling(non_stop=True, *args, **kwargs)
 
     def scheduled_alarm(self, curr_time: str):
-        if bot.time_provider is None:
+        if self.time_provider is None:
             raise ConnectionError("Alarm function is currently unavailable.")
 
         chats_to_notify = self.time_provider.get_chats_to_notify(curr_time)
@@ -45,6 +45,18 @@ class MyBot(tb.TeleBot):
             self.send_message(chat_id=chat, text=message)
             if message != "Как Ваши дела?":
                 self.send_message(chat_id=chat, text="Все ли у Вас в порядке?")
+
+    def set_poll_handler_type(self, poll_type: str):
+        self.poll_answer_handlers.clear()
+
+        @tb.TeleBot.poll_answer_handler(self)
+        def answers_handler(poll_answers: tb.types.PollAnswer):
+            if poll_type == "relapse":
+                self.user_provider.update_test(str(poll_answers.user.id), rl_results=poll_answers.option_ids)
+            elif poll_type == "depression":
+                bot.user_provider.update_test(str(poll_answers.user.id), dp_results=poll_answers.option_ids)
+
+        return answers_handler
 
 
 user_provider = UserProvider("databases/users.db")
@@ -55,7 +67,7 @@ bot = MyBot(token=TOKEN,
             telegram_client=tg_client,
             provider_user=user_provider,
             provider_time=time_provider,
-            model_client=nlp_model_loader)
+            model_client=None)
 bot.setup_res()
 
 
@@ -69,7 +81,6 @@ def registration(message: tb.types.Message):
     create_user = False
 
     if not user:
-        print("Start creating user!")
         bot.user_provider.create_user(user_id=str(user_id), chat_id=chat_id, username=username)
         create_user = True
     bot.reply_to(message=message, text=f"Вы {'уже' if not create_user else ''} "
@@ -105,14 +116,32 @@ def delete_alarm(message: tb.types.Message):
     bot.reply_to(message, text=f"Будильник на {curr_time} удален.")
 
 
-@bot.poll_answer_handler()
-def dp_answers(poll_answers: tb.types.PollAnswer):
-    bot.user_provider.update_test(str(poll_answers.user.id), dp_results=str(len(poll_answers.option_ids)))
+@bot.callback_query_handler(func=lambda call: True)
+def reply(call: tb.types.CallbackQuery):
+    if call.data == "relapse":
+        bot.send_poll(chat_id=call.from_user.id,
+                      question="Тест на возможные причины возникновения тяги:",
+                      options=[option[0] for option in bot.user_provider.RELAPSE_POLL_OPTIONS],
+                      allows_multiple_answers=True,
+                      open_period=120,
+                      is_anonymous=False)
+        bot.set_poll_handler_type("relapse")
+    elif call.data == "depression":
+        bot.send_poll(chat_id=call.from_user.id,
+                      question="Тест на симптоматику депрессивной фазы:",
+                      options=[option[0] for option in bot.user_provider.DEPRESSION_POLL_OPTIONS],
+                      allows_multiple_answers=True,
+                      open_period=120,
+                      is_anonymous=False)
+        bot.set_poll_handler_type("depression")
 
 
-@bot.poll_answer_handler()
-def rl_answers(poll_answers: tb.types.PollAnswer):
-    bot.user_provider.update_test(str(poll_answers.user.id), rl_results=str(len(poll_answers.option_ids)))
+@bot.message_handler(commands=["take_test"])
+def choose_test(message: tb.types.Message):
+    markup = tb.types.InlineKeyboardMarkup()
+    markup.add(tb.types.InlineKeyboardButton(text="Тест на настроение", callback_data="depression"),
+               tb.types.InlineKeyboardButton(text="Вероятность рецидива", callback_data="relapse"))
+    bot.send_message(chat_id=message.chat.id, text="Что Вас беспокоит?", reply_markup=markup, timeout=30)
 
 
 @bot.message_handler(content_types=["text"])
@@ -122,19 +151,4 @@ def get_text_message(message: tb.types.Message):
                                                        "не доступна.")
     else:
         response = bot.nlp_model.get_response(message.text)
-        if response == "relapse test send":
-            bot.send_poll(chat_id=message.chat.id,
-                          question="Тест на возможные причины возникновения тяги:",
-                          options=bot.nlp_model.RELAPSE_POLL_OPTIONS,
-                          allows_multiple_answers=True,
-                          is_anonymous=False)
-            bot.poll_answer_handler(rl_answers)
-        elif response == "depression test send":
-            bot.send_poll(chat_id=message.chat.id,
-                          question="Тест на симптоматику депрессивного эпизода:",
-                          options=bot.nlp_model.DEPRESSION_POLL_OPTIONS,
-                          allows_multiple_answers=True,
-                          is_anonymous=False)
-            bot.poll_answer_handler(dp_answers)
-        else:
-            bot.send_message(chat_id=message.chat.id, text=response)
+        bot.send_message(chat_id=message.chat.id, text=response)

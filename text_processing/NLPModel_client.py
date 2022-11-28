@@ -8,9 +8,6 @@ from train import train_model
 
 
 class ModelClient:
-    RELAPSE_POLL_OPTIONS = []
-    DEPRESSION_POLL_OPTIONS = []
-
     def __init__(self):
         if not os.path.exists("text_processing/nlp_resources_files/data.pth"):
             print("Model training")
@@ -28,11 +25,8 @@ class ModelClient:
         self.model.load_state_dict(data["model_state"])
         self.model.eval()
 
-    def set_up(self, fp_depression_criteria: str, fp_relapse_criteria: str):
-        with open(fp_relapse_criteria) as fr:
-            self.RELAPSE_POLL_OPTIONS = fr.readlines()
-        with open(fp_depression_criteria) as fr:
-            self.DEPRESSION_POLL_OPTIONS = fr.readlines()
+    def set_up(self):
+        pass
 
     def __predict_class(self, sentence: str):
         sentence = tokenize(sentence)
@@ -51,10 +45,6 @@ class ModelClient:
     def get_response(self, sentence: str):
         tag, prob = self.__predict_class(sentence)
         if prob.item() > 0.75:
-            if tag == "relapse test":
-                return "relapse test send"
-            elif tag == "depression test":
-                return "depression test send"
             for intent in self.intents['intents']:
                 if tag == intent["tag"]:
                     return random.choice(intent['responses'])
