@@ -54,6 +54,8 @@ class UserProvider:
         print("fantastic")
 
     def create_statistics(self, user_id: str):
+        users_data = self.get_user(user_id=user_id)
+
         # TODO: 3. Create statistics provider
         pass
 
