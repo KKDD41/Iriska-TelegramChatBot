@@ -1,5 +1,9 @@
 from clients import SQLiteClient
-
+from matplotlib import use
+import matplotlib.pyplot as plt
+from numpy import array
+from PIL import Image
+from io import BytesIO
 
 class UserProvider:
     CREATE_USER = """
@@ -22,6 +26,7 @@ class UserProvider:
 
     def set_up(self, fp_relapse_criteria: str, fp_depression_criteria: str):
         self.DB_client.create_conn()
+        use("Agg")
         with open(fp_relapse_criteria) as fr:
             lines = fr.readlines()
             self.RELAPSE_POLL_OPTIONS = [list(option_string.rsplit(maxsplit=1)) for option_string in lines]
@@ -51,13 +56,30 @@ class UserProvider:
                                      (user[3] + " " + dp_results if dp_results else user[3],
                                       user[4] + " " + rl_results if rl_results else user[4],
                                       user_id))
-        print("fantastic")
 
     def create_statistics(self, user_id: str):
         users_data = self.get_user(user_id=user_id)
+        figure, (axis1, axis2) = plt.subplots(2, 1)
 
-        # TODO: 3. Create statistics provider
-        pass
+        dp_points = []
+        rl_points = []
+        for test_result in users_data[3].split():
+            dp_points.append(list(map(int, [c for c in test_result])))
+        for test_result in users_data[4].split():
+            rl_points.append(list(map(int, [c for c in test_result])))
+
+        for i in range(3):
+            axis1.plot(array(list(range(len(dp_points)))), array([point[i] for point in dp_points]))
+            axis2.plot(array(list(range(len(rl_points)))), array([point[i] for point in rl_points]))
+
+        bytes_io = BytesIO()
+        plt.savefig(bytes_io)
+        bytes_io.seek(0)
+        image = Image.open(bytes_io)
+
+        return image
+
+        # TODO: 5. construct beautiful graphics
 
     def __answers_processing(self, answers, poll_type: str):
         groups_counter = [0, 0, 0]
@@ -69,7 +91,7 @@ class UserProvider:
         elif poll_type == "relapse":
             for ans in answers:
                 groups_counter[int(self.RELAPSE_POLL_OPTIONS[ans][1])] += 1
-        print("great")
         return "".join([str(cntr) for cntr in groups_counter])
+
 
 
