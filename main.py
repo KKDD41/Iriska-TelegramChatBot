@@ -3,6 +3,7 @@ from my_bot import bot, ADMIN_CHAT_ID
 
 
 if __name__ == "__main__":
+    # bot.start_polling()
     while True:
         try:
             bot.start_polling()

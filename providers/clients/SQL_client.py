@@ -31,4 +31,15 @@ class SQLiteClient:
             raise ConnectionError("There is no definition for field 'self.conn'.")
 
 
-
+if __name__ == "__main__":
+    scl = SQLiteClient("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\databases\\users.db")
+    scl.create_conn()
+    scl.conn.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            user_id text PRIMARY KEY,
+            chat_id integer,
+            username text,
+            dp_results text,
+            rl_results text
+        );
+    """)

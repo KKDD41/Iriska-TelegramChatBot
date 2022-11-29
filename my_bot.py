@@ -144,6 +144,12 @@ def choose_test(message: tb.types.Message):
     bot.send_message(chat_id=message.chat.id, text="Что Вас беспокоит?", reply_markup=markup, timeout=30)
 
 
+@bot.message_handler(commands=["statistics"])
+def provide_statistics(message: tb.types.Message):
+    stat_image = bot.user_provider.create_statistics(str(message.from_user.id))
+    bot.send_photo(chat_id=message.chat.id, photo=stat_image)
+
+
 @bot.message_handler(content_types=["text"])
 def get_text_message(message: tb.types.Message):
     if bot.nlp_model is None:
