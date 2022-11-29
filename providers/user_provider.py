@@ -5,6 +5,7 @@ from numpy import array
 from PIL import Image
 from io import BytesIO
 
+
 class UserProvider:
     CREATE_USER = """
         INSERT INTO users(user_id, chat_id, username, dp_results, rl_results) VALUES (?, ?, ?, ?, ?);
@@ -68,9 +69,37 @@ class UserProvider:
         for test_result in users_data[4].split():
             rl_points.append(list(map(int, [c for c in test_result])))
 
+        colors = ["c", "b", "r"]
+        labels = ["emotional state", "relationships and\nprofessional activities", "physical state"]
         for i in range(3):
-            axis1.plot(array(list(range(len(dp_points)))), array([point[i] for point in dp_points]))
-            axis2.plot(array(list(range(len(rl_points)))), array([point[i] for point in rl_points]))
+            axis1.plot(array(list(range(1, len(dp_points) + 1))),
+                       array([point[i] for point in dp_points]),
+                       color=colors[i],
+                       label=labels[i])
+            axis2.plot(array(list(range(1, len(rl_points) + 1))),
+                       array([point[i] for point in rl_points]),
+                       color=colors[i],
+                       label=labels[i])
+        axis1.plot(array(list(range(1, len(dp_points) + 1))),
+                   array([sum(point) for point in dp_points]),
+                   color='k',
+                   linestyle="-",
+                   linewidth="4",
+                   label="General")
+        axis2.plot(array(list(range(1, len(rl_points) + 1))),
+                   array([sum(point) for point in rl_points]),
+                   color='k',
+                   linestyle="-",
+                   linewidth="4",
+                   label="General")
+        axis1.set_ylim([0, 10])
+        axis2.set_ylim([0, 10])
+
+        axis1.set_title(label="General emotional state tracker")
+        axis1.legend(loc="upper right", fontsize=8)
+        axis2.set_title(label="Relapse factors tracker")
+        axis2.legend(loc="upper right", fontsize=8)
+        figure.tight_layout()
 
         bytes_io = BytesIO()
         plt.savefig(bytes_io)
@@ -78,8 +107,6 @@ class UserProvider:
         image = Image.open(bytes_io)
 
         return image
-
-        # TODO: 5. construct beautiful graphics
 
     def __answers_processing(self, answers, poll_type: str):
         groups_counter = [0, 0, 0]
@@ -92,6 +119,3 @@ class UserProvider:
             for ans in answers:
                 groups_counter[int(self.RELAPSE_POLL_OPTIONS[ans][1])] += 1
         return "".join([str(cntr) for cntr in groups_counter])
-
-
-

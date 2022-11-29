@@ -146,9 +146,6 @@ def choose_test(message: tb.types.Message):
 
 @bot.message_handler(commands=["statistics"])
 def provide_statistics(message: tb.types.Message):
-    photo = open("C:\\Users\\Kate\\Desktop\\Никита\\Screenshot 2022-09-04 201322.png", "rb")
-    bot.send_photo(chat_id=message.chat.id, photo=photo, caption="Буся на экране")
-
     stat_image = bot.user_provider.create_statistics(str(message.from_user.id))
     bot.send_photo(chat_id=message.chat.id, photo=stat_image)
 
