@@ -22,17 +22,19 @@ class UserProvider:
     RELAPSE_POLL_OPTIONS = []
     DEPRESSION_POLL_OPTIONS = []
 
-    def __init__(self, filepath: str):
+    def __init__(self, filepath: str, fp_relapse_criteria: str, fp_depression_criteria: str):
         self.DB_client = SQLiteClient(filepath)
+        self.fp_relapse_criteria = fp_relapse_criteria
+        self.fp_depression_criteria = fp_depression_criteria
 
-    def set_up(self, fp_relapse_criteria: str, fp_depression_criteria: str):
+    def set_up(self):
         self.DB_client.create_conn()
         use("Agg")
-        with open(fp_relapse_criteria) as fr:
+        with open(self.fp_relapse_criteria) as fr:
             lines = fr.readlines()
             self.RELAPSE_POLL_OPTIONS = [list(option_string.rsplit(maxsplit=1)) for option_string in lines]
 
-        with open(fp_depression_criteria) as fr:
+        with open(self.fp_depression_criteria) as fr:
             lines = fr.readlines()
             self.DEPRESSION_POLL_OPTIONS = [list(option_string.rsplit(maxsplit=1)) for option_string in lines]
 

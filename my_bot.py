@@ -12,7 +12,7 @@ ADMIN_CHAT_ID = env.int("ADMIN_CHAT_ID")
 class MyBot(tb.TeleBot):
     def __init__(self,
                  telegram_client: TelegramClient,
-                 provider_user: UserProvider,
+                 provider_user: UserProvider = None,
                  provider_time: TimeProvider = None,
                  model_client: ModelClient = None,
                  *args, **kwargs):
@@ -22,14 +22,10 @@ class MyBot(tb.TeleBot):
         self.time_provider = provider_time
         self.nlp_model = model_client
 
-    def setup_res(self):
-        self.user_provider.set_up(fp_relapse_criteria="./text_processing/nlp_resources_files/relapse_poll_options.txt",
-                                  fp_depression_criteria="./text_processing/nlp_resources_files"
-                                                         "/depression_poll_options.txt")
-        if self.nlp_model is not None:
-            self.nlp_model.set_up()
-        if self.time_provider is not None:
-            self.time_provider.set_up()
+    def setup_resources(self):
+        for provider in (self.user_provider, self.time_provider, self.nlp_model):
+            if provider is not None:
+                provider.set_up()
 
     def start_polling(self, *args, **kwargs):
         if self.time_provider is not None:
@@ -59,16 +55,19 @@ class MyBot(tb.TeleBot):
         return answers_handler
 
 
-user_provider = UserProvider("databases/users.db")
+user_provider = UserProvider("databases/users.db",
+                             fp_relapse_criteria="poll_options/relapse_poll_options.txt",
+                             fp_depression_criteria="poll_options/depression_poll_options.txt")
 time_provider = TimeProvider("databases/alarm.db")
 tg_client = TelegramClient(TOKEN, base_url="https://api.telegram.org/")
-nlp_model_loader = ModelClient()
+nlp_model_loader = ModelClient("nlp_resources_files/data.pth",
+                               "nlp_resources_files/intents.json")
 bot = MyBot(token=TOKEN,
             telegram_client=tg_client,
             provider_user=user_provider,
             provider_time=time_provider,
-            model_client=None)
-bot.setup_res()
+            model_client=nlp_model_loader)
+bot.setup_resources()
 
 
 @bot.message_handler(commands=["hello"])
@@ -90,7 +89,7 @@ def registration(message: tb.types.Message):
 @bot.message_handler(commands=["new_alarm"])
 def add_alarm(message: tb.types.Message):
     if bot.time_provider is None:
-        raise ConnectionError("Alarm function is currently unavailable.")
+        raise ConnectionError("Извините, функция будильника для меня сейчас не доступна.")
 
     curr_time = message.text[11: 16]
     curr_message = message.text[16:]
@@ -106,7 +105,7 @@ def add_alarm(message: tb.types.Message):
 @bot.message_handler(commands=["delete_alarm"])
 def delete_alarm(message: tb.types.Message):
     if bot.time_provider is None:
-        raise ConnectionError("Alarm function is currently unavailable.")
+        raise ConnectionError("Извините, функция будильника для меня сейчас не доступна.")
 
     curr_time = message.text[14: 19]
     bot.time_provider.update_time(curr_time=curr_time,

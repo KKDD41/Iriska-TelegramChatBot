@@ -19,7 +19,6 @@ def text_from_pdf_url(url: str, pages=None):
     return result_str
 
 
-book = text_from_pdf_url("https://library.iliauni.edu.ge/wp-content/uploads/2017/04/Starshenbaum-G.V.-Addiktologiya"
-                 ".-Psihologiya-i-psihoterapiya-zavisimostej-Kogito-TSentr-2006-368s.pdf", [44, 45])
+book = text_from_pdf_url("https://library.iliauni.edu.ge/wp-content/uploads/2017/04/Starshenbaum-G.V.-Addiktologiya.-Psihologiya-i-psihoterapiya-zavisimostej-Kogito-TSentr-2006-368s.pdf", [44, 45])
 
 print(book)
