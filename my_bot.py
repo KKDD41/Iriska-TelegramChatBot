@@ -1,13 +1,17 @@
 import telebot as tb
-from envparse import Env
+import os
+import sys
 from threading import Thread
 from providers import TimeProvider, UserProvider, TelegramClient
 from text_processing import ModelClient
 from datetime import datetime, timedelta
 
-env = Env()
-TOKEN = env.str("TOKEN")
-ADMIN_CHAT_ID = env.int("ADMIN_CHAT_ID")
+
+# here = os.path.dirname(os.path.realpath(__file__))
+# sys.path.append(os.path.join(here, "./vendored"))
+
+TOKEN = os.getenv("TELEGRAM_TOKEN")
+ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID")
 
 
 class MyBot(tb.TeleBot):

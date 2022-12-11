@@ -2,7 +2,7 @@ from datetime import datetime
 from my_bot import bot, ADMIN_CHAT_ID
 
 
-if __name__ == "__main__":
+def work_aws():
     while True:
         try:
             bot.start_polling()
