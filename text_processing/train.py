@@ -20,8 +20,8 @@ class ChatDataset(Dataset):
         return self.n_samples
 
 
-def collect_training_data():
-    with open('./text_processing/nlp_resources_files/intents.json', 'r') as f:
+def collect_training_data(fp_to_intents: str):
+    with open(fp_to_intents, 'r') as f:
         intents = json.load(f)
 
     all_words = []
@@ -42,8 +42,8 @@ def collect_training_data():
     return all_words, tags, xy
 
 
-def train_model():
-    all_words, tags, xy = collect_training_data()
+def train_model(fp_to_model: str, fp_to_intents: str):
+    all_words, tags, xy = collect_training_data(fp_to_intents)
 
     X_train = []
     y_train = []
@@ -97,7 +97,5 @@ def train_model():
         "tags": tags
     }
 
-    FILE = "./text_processing/nlp_resources_files/data.pth"
-    torch.save(data, FILE)
-
-    print(f'training complete. file saved to {FILE}')
+    torch.save(data, fp_to_model)
+    print(f'training complete. file saved to {fp_to_model}')

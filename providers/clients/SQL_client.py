@@ -40,6 +40,9 @@ if __name__ == "__main__":
             chat_id integer,
             username text,
             dp_results text,
-            rl_results text
+            rl_results text,
+            number_of_day integer,
+            data text
         );
     """)
+

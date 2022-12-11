@@ -8,15 +8,19 @@ from train import train_model
 
 
 class ModelClient:
-    def __init__(self):
-        if not os.path.exists("text_processing/nlp_resources_files/data.pth"):
+    def __init__(self, fp_to_model: str, fp_to_intents: str):
+        self.fp_to_model = fp_to_model
+        self.fp_to_intents = fp_to_intents
+        if not os.path.exists(fp_to_model):
             print("Model training")
-            train_model()
+            train_model(fp_to_model, fp_to_intents)
+            print("Model saved successfully")
 
+    def set_up(self):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-        data = torch.load("text_processing/nlp_resources_files/data.pth")
-        self.intents = json.loads(open('text_processing/nlp_resources_files/intents.json').read())
+        data = torch.load(self.fp_to_model)
+        self.intents = json.loads(open(self.fp_to_intents).read())
 
         self.words = data['all_words']
         self.classes = data['tags']
@@ -24,9 +28,6 @@ class ModelClient:
         self.model = NeuralNet(data["input_size"], data["hidden_size"], data["output_size"]).to(self.device)
         self.model.load_state_dict(data["model_state"])
         self.model.eval()
-
-    def set_up(self):
-        pass
 
     def __predict_class(self, sentence: str):
         sentence = tokenize(sentence)
@@ -49,4 +50,4 @@ class ModelClient:
                 if tag == intent["tag"]:
                     return random.choice(intent['responses'])
         else:
-            return "Не совсем поняла фразу"
+            return "Не совсем поняла :(\nМожете, пожалуйста, переформулировать?"

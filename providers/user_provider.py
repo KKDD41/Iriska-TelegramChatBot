@@ -8,31 +8,38 @@ from io import BytesIO
 
 class UserProvider:
     CREATE_USER = """
-        INSERT INTO users(user_id, chat_id, username, dp_results, rl_results) VALUES (?, ?, ?, ?, ?);
+        INSERT INTO users(user_id, chat_id, username, dp_results, rl_results, number_of_day, data) 
+        VALUES (?, ?, ?, ?, ?, ?, ?);
     """
 
     GET_USER = """
-        SELECT user_id, chat_id, username, dp_results, rl_results FROM users WHERE user_id = %s;
+        SELECT user_id, chat_id, username, dp_results, rl_results, number_of_day, data FROM users WHERE user_id = %s;
     """
 
     UPDATE_TEST = """
         UPDATE users SET dp_results = ?, rl_results = ? WHERE user_id = ?;
     """
 
+    UPDATE_DAY = """
+        UPDATE users SET number_of_day = ?, data = ? WHERE user_id = ?;
+    """
+
     RELAPSE_POLL_OPTIONS = []
     DEPRESSION_POLL_OPTIONS = []
 
-    def __init__(self, filepath: str):
+    def __init__(self, filepath: str, fp_relapse_criteria: str, fp_depression_criteria: str):
         self.DB_client = SQLiteClient(filepath)
+        self.fp_relapse_criteria = fp_relapse_criteria
+        self.fp_depression_criteria = fp_depression_criteria
 
-    def set_up(self, fp_relapse_criteria: str, fp_depression_criteria: str):
+    def set_up(self):
         self.DB_client.create_conn()
         use("Agg")
-        with open(fp_relapse_criteria) as fr:
+        with open(self.fp_relapse_criteria) as fr:
             lines = fr.readlines()
             self.RELAPSE_POLL_OPTIONS = [list(option_string.rsplit(maxsplit=1)) for option_string in lines]
 
-        with open(fp_depression_criteria) as fr:
+        with open(self.fp_depression_criteria) as fr:
             lines = fr.readlines()
             self.DEPRESSION_POLL_OPTIONS = [list(option_string.rsplit(maxsplit=1)) for option_string in lines]
 
@@ -41,7 +48,7 @@ class UserProvider:
         return user[0] if user else []
 
     def create_user(self, user_id: str, chat_id: int, username: str, dp_results: str = "", rl_results: str = ""):
-        self.DB_client.execute_query(self.CREATE_USER, (user_id, chat_id, username, dp_results, rl_results))
+        self.DB_client.execute_query(self.CREATE_USER, (user_id, chat_id, username, dp_results, rl_results, None, None))
 
     def update_test(self, user_id: str, dp_results=None, rl_results=None):
         rl_results = "" if rl_results is None else self.__answers_processing(rl_results, "relapse")
@@ -57,6 +64,9 @@ class UserProvider:
                                      (user[3] + " " + dp_results if dp_results else user[3],
                                       user[4] + " " + rl_results if rl_results else user[4],
                                       user_id))
+
+    def update_day(self, user_id: str, curr_day: int, curr_date):
+        self.DB_client.execute_query(self.UPDATE_DAY, (curr_day, curr_date, user_id))
 
     def create_statistics(self, user_id: str):
         users_data = self.get_user(user_id=user_id)
@@ -94,6 +104,8 @@ class UserProvider:
                    label="General")
         axis1.set_ylim([0, 10])
         axis2.set_ylim([0, 10])
+        axis1.set_xticklabels([])
+        axis2.set_xticklabels([])
 
         axis1.set_title(label="General emotional state tracker")
         axis1.legend(loc="upper right", fontsize=8)
@@ -110,8 +122,6 @@ class UserProvider:
 
     def __answers_processing(self, answers, poll_type: str):
         groups_counter = [0, 0, 0]
-        print(self.DEPRESSION_POLL_OPTIONS)
-        print(answers)
         if poll_type == "depression":
             for ans in answers:
                 groups_counter[int(self.DEPRESSION_POLL_OPTIONS[ans][1])] += 1
