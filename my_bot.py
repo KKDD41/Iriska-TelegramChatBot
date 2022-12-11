@@ -3,6 +3,7 @@ from envparse import Env
 from threading import Thread
 from providers import TimeProvider, UserProvider, TelegramClient
 from text_processing import ModelClient
+from datetime import datetime, timedelta
 
 env = Env()
 TOKEN = env.str("TOKEN")
@@ -149,11 +150,28 @@ def provide_statistics(message: tb.types.Message):
     bot.send_photo(chat_id=message.chat.id, photo=stat_image)
 
 
+@bot.message_handler(commands=["update_day"])
+def update_days_sober(message: tb.types.Message):
+    curr_day = int(message.text[12:])
+    date_of_update = datetime.fromtimestamp(message.date).date()
+    bot.user_provider.update_day(str(message.from_user.id), curr_day, message.date)
+
+    bot.reply_to(message,
+                 text=f"Текущий день трезвости {curr_day}. Счетчик идет от {date_of_update - timedelta(curr_day)}.")
+    if curr_day < 10:
+        bot.send_message(message.chat.id, text="Сейчас Вам может будет тяжело, но это того стоит :)")
+    elif curr_day < 30:
+        bot.send_message(message.chat.id, text="Вы отлично справляетесь, так держать!")
+    else:
+        bot.send_message(message.chat.id, text="Вы уже больше месяца чистый, поздравляю!")
+
+
 @bot.message_handler(content_types=["text"])
 def get_text_message(message: tb.types.Message):
     if bot.nlp_model is None:
         bot.send_message(chat_id=message.chat.id, text="Извините, на данном этапе обработка текстовых сообщений мне "
                                                        "не доступна.")
     else:
-        response = bot.nlp_model.get_response(message.text)
-        bot.send_message(chat_id=message.chat.id, text=response)
+        responses = list(bot.nlp_model.get_response(message.text).split(sep="\n\n"))
+        for response in responses:
+            bot.send_message(chat_id=message.chat.id, text=response)
