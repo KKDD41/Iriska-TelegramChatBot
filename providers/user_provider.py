@@ -68,6 +68,9 @@ class UserProvider:
     def update_day(self, user_id: str, curr_day: int, curr_date):
         self.DB_client.execute_query(self.UPDATE_DAY, (curr_day, curr_date, user_id))
 
+    def return_day(self, user_id):
+        return self.get_user(user_id)[5:]
+
     def create_statistics(self, user_id: str):
         users_data = self.get_user(user_id=user_id)
         figure, (axis1, axis2) = plt.subplots(2, 1)

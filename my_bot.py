@@ -1,14 +1,9 @@
 import telebot as tb
 import os
-import sys
 from threading import Thread
 from providers import TimeProvider, UserProvider, TelegramClient
 from text_processing import ModelClient
 from datetime import datetime, timedelta
-
-
-# here = os.path.dirname(os.path.realpath(__file__))
-# sys.path.append(os.path.join(here, "./vendored"))
 
 TOKEN = os.getenv("TELEGRAM_TOKEN")
 ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID")
@@ -168,6 +163,18 @@ def update_days_sober(message: tb.types.Message):
         bot.send_message(message.chat.id, text="Вы отлично справляетесь, так держать!")
     else:
         bot.send_message(message.chat.id, text="Вы уже больше месяца чистый, поздравляю!")
+
+
+@bot.message_handler(commands=["get_day"])
+def get_day_sober(message: tb.types.Message):
+    day, date_of_update = bot.user_provider.return_day(message.from_user.id)
+    date_of_update = datetime.fromtimestamp(date_of_update)
+    curr_date = datetime.fromtimestamp(message.date)
+
+    bot.reply_to(message, text=f"На момент {date_of_update} у Вас был {day}-й день трезвости.")
+    if date_of_update != curr_date:
+        bot.send_message(chat_id=message.chat.id,
+                         text=f"Сегодня {curr_date}. Пожалуйста, обновите сегодня день трезвости.")
 
 
 @bot.message_handler(content_types=["text"])
