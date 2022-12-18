@@ -45,4 +45,13 @@ if __name__ == "__main__":
             data text
         );
     """)
+    scl = SQLiteClient("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\databases\\alarm.db")
+    scl.create_conn()
+    scl.conn.execute("""
+        CREATE TABLE IF NOT EXISTS alarm (
+            time text, 
+            chats_to_notify text, 
+            notification_messages text
+        );
+    """)
 

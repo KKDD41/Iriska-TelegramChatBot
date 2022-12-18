@@ -2,9 +2,9 @@ import telebot as tb
 import os
 from threading import Thread
 from providers import TimeProvider, UserProvider, TelegramClient
-from text_processing import ModelClient
 from datetime import datetime, timedelta
 
+# TODO: create env variables remote
 TOKEN = os.getenv("TELEGRAM_TOKEN")
 ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID")
 
@@ -14,7 +14,7 @@ class MyBot(tb.TeleBot):
                  telegram_client: TelegramClient,
                  provider_user: UserProvider = None,
                  provider_time: TimeProvider = None,
-                 model_client: ModelClient = None,
+                 model_client=None,
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.telegram_client = telegram_client
@@ -60,8 +60,8 @@ user_provider = UserProvider("databases/users.db",
                              fp_depression_criteria="poll_options/depression_poll_options.txt")
 time_provider = TimeProvider("databases/alarm.db")
 tg_client = TelegramClient(TOKEN, base_url="https://api.telegram.org/")
-nlp_model_loader = ModelClient("nlp_resources_files/data.pth",
-                               "nlp_resources_files/intents.json")
+nlp_model_loader = None
+# ModelClient("nlp_resources_files/data.pth", "nlp_resources_files/intents.json")
 bot = MyBot(token=TOKEN,
             telegram_client=tg_client,
             provider_user=user_provider,
@@ -183,6 +183,7 @@ def get_text_message(message: tb.types.Message):
         bot.send_message(chat_id=message.chat.id, text="Извините, на данном этапе обработка текстовых сообщений мне "
                                                        "не доступна.")
     else:
+        # TODO: create straight response
         responses = list(bot.nlp_model.get_response(message.text).split(sep="\n\n"))
         for response in responses:
             bot.send_message(chat_id=message.chat.id, text=response)
