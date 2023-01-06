@@ -10,6 +10,8 @@ ADMIN_CHAT_ID = os.getenv("ADMIN_CHAT_ID")
 
 
 class MyBot(tb.TeleBot):
+    __slots__ = "telegram_client", "user_provider", "time_provider", "nlp_model"
+
     def __init__(self,
                  telegram_client: TelegramClient,
                  provider_user: UserProvider = None,

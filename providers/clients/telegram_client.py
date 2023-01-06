@@ -2,6 +2,8 @@ import requests
 
 
 class TelegramClient:
+    __slots__ = "token", "base_url"
+
     def __init__(self, token: str, base_url: str):
         self.token = token
         self.base_url = base_url
@@ -16,4 +18,3 @@ class TelegramClient:
         url = self.init_url(method)
         response = requests.post(url, params=params, data=data)
         return response.json()
-

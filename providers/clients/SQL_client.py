@@ -2,6 +2,8 @@ import sqlite3
 
 
 class SQLiteClient:
+    __slots__ = "filepath", "conn"
+
     def __init__(self, filepath: str):
         self.filepath = filepath
         self.conn = None
@@ -29,20 +31,4 @@ class SQLiteClient:
                 raise error.__class__("Command in 'SQLClient.execute_select_query' is invalid.")
         else:
             raise ConnectionError("There is no definition for field 'self.conn'.")
-
-
-if __name__ == "__main__":
-    scl = SQLiteClient("C:\\Users\\Kate\\Desktop\\IRISKA\\Irirska-TelegramChatBot\\databases\\users.db")
-    scl.create_conn()
-    scl.conn.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            user_id text PRIMARY KEY,
-            chat_id integer,
-            username text,
-            dp_results text,
-            rl_results text,
-            number_of_day integer,
-            data text
-        );
-    """)
 

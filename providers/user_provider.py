@@ -7,6 +7,9 @@ from io import BytesIO
 
 
 class UserProvider:
+    __slots__ = (
+        "DB_client", "fp_relapse_criteria", "fp_depression_criteria", "RELAPSE_POLL_OPTIONS", "DEPRESSION_POLL_OPTIONS")
+
     CREATE_USER = """
         INSERT INTO users(user_id, chat_id, username, dp_results, rl_results, number_of_day, data) 
         VALUES (?, ?, ?, ?, ?, ?, ?);
@@ -24,24 +27,37 @@ class UserProvider:
         UPDATE users SET number_of_day = ?, data = ? WHERE user_id = ?;
     """
 
-    RELAPSE_POLL_OPTIONS = []
-    DEPRESSION_POLL_OPTIONS = []
+    CREATE_USERS_DB = """
+            CREATE TABLE IF NOT EXISTS users (
+                user_id text PRIMARY KEY,
+                chat_id integer,
+                username text,
+                dp_results text,
+                rl_results text,
+                number_of_day integer,
+                data text
+            );
+        """
 
     def __init__(self, filepath: str, fp_relapse_criteria: str, fp_depression_criteria: str):
+        self.DEPRESSION_POLL_OPTIONS = None
+        self.RELAPSE_POLL_OPTIONS = None
         self.DB_client = SQLiteClient(filepath)
         self.fp_relapse_criteria = fp_relapse_criteria
         self.fp_depression_criteria = fp_depression_criteria
 
     def set_up(self):
         self.DB_client.create_conn()
+        self.DB_client.execute_query(self.CREATE_USERS_DB)
+
         use("Agg")
         with open(self.fp_relapse_criteria) as fr:
             lines = fr.readlines()
-            self.RELAPSE_POLL_OPTIONS = [list(option_string.rsplit(maxsplit=1)) for option_string in lines]
+            self.RELAPSE_POLL_OPTIONS = (list(option_string.rsplit(maxsplit=1)) for option_string in lines)
 
         with open(self.fp_depression_criteria) as fr:
             lines = fr.readlines()
-            self.DEPRESSION_POLL_OPTIONS = [list(option_string.rsplit(maxsplit=1)) for option_string in lines]
+            self.DEPRESSION_POLL_OPTIONS = (list(option_string.rsplit(maxsplit=1)) for option_string in lines)
 
     def get_user(self, user_id: str):
         user = self.DB_client.execute_select_query(self.GET_USER % user_id)
@@ -82,8 +98,8 @@ class UserProvider:
         for test_result in users_data[4].split():
             rl_points.append(list(map(int, [c for c in test_result])))
 
-        colors = ["c", "b", "r"]
-        labels = ["emotional state", "relationships and\nprofessional activities", "physical state"]
+        colors = ("c", "b", "r")
+        labels = ("emotional state", "relationships and\nprofessional activities", "physical state")
         for i in range(3):
             axis1.plot(array(list(range(1, len(dp_points) + 1))),
                        array([point[i] for point in dp_points]),

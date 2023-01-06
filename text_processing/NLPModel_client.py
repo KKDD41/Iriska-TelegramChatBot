@@ -8,7 +8,15 @@ from train import train_model
 
 
 class ModelClient:
+    __slots__ = "device", "intents", "words", "classes", "model", "fp_to_model", "fp_to_intents"
+
     def __init__(self, fp_to_model: str, fp_to_intents: str):
+        self.model = None
+        self.classes = None
+        self.words = None
+        self.intents = None
+        self.device = None
+
         self.fp_to_model = fp_to_model
         self.fp_to_intents = fp_to_intents
         if not os.path.exists(fp_to_model):

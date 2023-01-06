@@ -4,6 +4,8 @@ from clients import SQLiteClient
 
 
 class TimeProvider:
+    __slots__ = "DB_client", "job_dict"
+
     SELECT_TIME = """
         SELECT time, chats_to_notify, notification_messages FROM alarm WHERE time = '%s';
     """
@@ -16,6 +18,13 @@ class TimeProvider:
     DELETE_TIME = """
         DELETE FROM alarm WHERE time = '%s';
     """
+    CREATE_ALARM_DB = """
+            CREATE TABLE IF NOT EXISTS alarm (
+                time text,
+                chats_to_notify text,
+                notification_messages text
+            );
+        """
 
     @staticmethod
     def schedule_checker():
@@ -29,6 +38,7 @@ class TimeProvider:
 
     def set_up(self):
         self.DB_client.create_conn()
+        self.DB_client.execute_query(self.CREATE_ALARM_DB)
 
     def get_chats_to_notify(self, curr_time: str):
         to_notify = self.DB_client.execute_select_query(self.SELECT_TIME % curr_time)
