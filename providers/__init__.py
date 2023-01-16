@@ -1,6 +1,6 @@
-from time_provider import TimeProvider
-from user_provider import UserProvider
-from clients import TelegramClient
+from time_provider import AlarmsManager
+from user_provider import DBAccessManager
+from clients import TelegramClient, PSQLClient
 
 
-__all__ = ("TelegramClient", "TimeProvider", "UserProvider")
+__all__ = ("TelegramClient", "AlarmsManager", "DBAccessManager", "PSQLClient")

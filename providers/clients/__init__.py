@@ -1,5 +1,5 @@
-from SQL_client import SQLiteClient
+from SQL_client import PSQLClient
 from telegram_client import TelegramClient
 
 
-__all__ = ("SQLiteClient", "TelegramClient")
+__all__ = ("PSQLClient", "TelegramClient")

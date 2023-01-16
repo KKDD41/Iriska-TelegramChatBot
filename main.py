@@ -9,3 +9,4 @@ if __name__ == "__main__":
         except Exception as error:
             bot.telegram_client.post(method="sendMessage", params={"chat_id": ADMIN_CHAT_ID,
                                                                    "text": f"{datetime.now()}: {error.__class__}"})
+            pass
