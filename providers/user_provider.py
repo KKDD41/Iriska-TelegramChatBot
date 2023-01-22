@@ -71,64 +71,60 @@ class DBAccessManager:
 
     def create_poll_statistics(self, user_id: int):
         dp_answers = self.db_client.execute_DQL_command("""
-                    SELECT answers
+                    SELECT answers, date
                     FROM depression_poll
-                    WHERE user_id = %s;
+                    WHERE user_id = %s
+                    ORDER BY date;
                 """, (user_id,))
         rl_answers = self.db_client.execute_DQL_command(f"""
-                    SELECT answers
+                    SELECT answers, date
                     FROM relapse_poll
-                    WHERE user_id = %s;
+                    WHERE user_id = %s
+                    ORDER BY date;
                 """, (user_id,))
         if not (dp_answers and rl_answers):
             return None
 
         dp_points = []
         rl_points = []
+        dp_dates = []
+        rl_dates = []
         for test_result in dp_answers:
-            dp_points.append([c for c in test_result])
+            dp_points.append([3 - int(c) for c in test_result[0]])
+            dp_dates.append(test_result[1].strftime("%d/%m"))
         for test_result in rl_answers:
-            rl_points.append([c for c in test_result])
+            rl_points.append([3 - int(c) for c in test_result[0]])
+            rl_dates.append(test_result[1].strftime("%d/%m"))
 
         use("Agg")
         figure, (axis1, axis2) = plt.subplots(2, 1)
 
-        colors = ("c", "b", "r")
+        colors = ("indigo", "blue", "plum")
         labels = ("emotional state", "relationships and\nprofessional activity", "physical state")
 
-        if dp_points:
-            for i in range(3):
-                axis1.plot(array(list(range(1, len(dp_points) + 1))),
-                           array([int(point[0][i]) for point in dp_points]),
-                           color=colors[i],
-                           label=labels[i])
-            axis1.plot(array(list(range(1, len(dp_points) + 1))),
-                       array([sum([int(point[0][i]) for i in range(3)]) for point in dp_points]),
-                       color='k',
-                       linestyle="-",
-                       linewidth="4",
-                       label="General")
-        if rl_points:
-            for i in range(3):
-                axis2.plot(array(list(range(1, len(rl_points) + 1))),
-                           array([int(point[0][i]) for point in rl_points]),
-                           color=colors[i],
-                           label=labels[i])
-            axis2.plot(array(list(range(1, len(rl_points) + 1))),
-                       array([sum([int(point[0][i]) for i in range(3)]) for point in rl_points]),
-                       color='k',
-                       linestyle="-",
-                       linewidth="4",
-                       label="General")
-        axis1.set_ylim([0, 10])
-        axis2.set_ylim([0, 10])
-        axis1.set_xticklabels([])
-        axis2.set_xticklabels([])
+        for points, axis, dates in ((dp_points, axis1, dp_dates), (rl_points, axis2, rl_dates)):
+            if points:
+                for i in range(3):
+                    axis.plot(array(list(range(1, len(points) + 1))),
+                              array([int(point[i]) for point in points]),
+                              color=colors[i],
+                              label=labels[i],
+                              marker='o',
+                              markersize='4',
+                              linewidth='2')
+                axis.plot(array(list(range(1, len(points) + 1))),
+                          array([sum(point) for point in points]),
+                          color='black',
+                          linestyle="-",
+                          linewidth="3",
+                          label="General trend")
+                axis.set_ylim([-1, 15])
+                axis.set_xticks(ticks=list(range(1, len(points) + 1)), labels=dates, rotation=20)
+                axis.legend(fontsize=7)
+                axis.grid()
 
         axis1.set_title(label="General emotional state tracker")
-        axis1.legend(loc="upper right", fontsize=8)
         axis2.set_title(label="Relapse factors tracker")
-        axis2.legend(loc="upper right", fontsize=8)
         figure.tight_layout()
 
         bytes_io = BytesIO()
@@ -180,7 +176,11 @@ class DBAccessManager:
         dates = array(["{}, {}".format(str(day_stat[0].day), day_stat[0].strftime("%a")) for
                        day_stat in user_doses])
 
-        plt.bar(x=dates, height=doses_per_day, label="Ethanol equivalent per day.")
+        plt.bar(x=dates,
+                height=doses_per_day,
+                label="Ethanol equivalent per day.",
+                color=[self.__choose_color(ml) for ml in doses_per_day]
+                )
         plt.title("Ethanol consumption in " + user_doses[0][0].strftime("%B"))
         plt.ylabel("ml")
         plt.xticks(rotation=30)
@@ -191,3 +191,12 @@ class DBAccessManager:
         image = Image.open(bytes_io)
 
         return image
+
+    @staticmethod
+    def __choose_color(ml_per_day: int):
+        if ml_per_day < 20:
+            return "yellowgreen"
+        elif ml_per_day < 50:
+            return "goldenrod"
+        else:
+            return "crimson"
