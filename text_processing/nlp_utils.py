@@ -2,7 +2,7 @@ import numpy as np
 from nltk import word_tokenize
 from nltk.stem.snowball import SnowballStemmer
 
-stemmer = SnowballStemmer("russian")
+stemmer = SnowballStemmer("english")
 ignore_words = ['?', '.', '!', ',', '/', ')', ':', '(']
 
 
@@ -20,5 +20,4 @@ def bag_of_words(raw_sentence, words):
     for idx, w in enumerate(words):
         if w in sentence_words:
             bag[idx] = 1
-
     return bag

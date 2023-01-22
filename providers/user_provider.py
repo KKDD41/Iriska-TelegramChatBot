@@ -1,4 +1,5 @@
 import datetime
+import json
 from clients import PSQLClient
 from matplotlib import use
 import matplotlib.pyplot as plt
@@ -7,57 +8,14 @@ from PIL import Image
 from io import BytesIO
 
 
-# class UserProvider:
-#     __slots__ = (
-#         "DB_client", "fp_relapse_criteria", "fp_depression_criteria", "RELAPSE_POLL_OPTIONS", "DEPRESSION_POLL_OPTIONS")
-#
-#     CREATE_USER = """
-#         INSERT INTO users(user_id, chat_id, username, dp_results, rl_results, number_of_day, data)
-#         VALUES (?, ?, ?, ?, ?, ?, ?);
-#     """
-#
-#     GET_USER = """
-#         SELECT user_id, chat_id, username, dp_results, rl_results, number_of_day, data FROM users WHERE user_id = %s;
-#     """
-#
-#     UPDATE_TEST = """
-#         UPDATE users SET dp_results = ?, rl_results = ? WHERE user_id = ?;
-#     """
-#
-#     UPDATE_DAY = """
-#         UPDATE users SET number_of_day = ?, data = ? WHERE user_id = ?;
-#     """
-#
-#     CREATE_USERS_DB = """
-#             CREATE TABLE IF NOT EXISTS users (
-#                 user_id text PRIMARY KEY,
-#                 chat_id integer,
-#                 username text,
-#                 dp_results text,
-#                 rl_results text,
-#                 number_of_day integer,
-#                 data text
-#             );
-#         """
-#
-#     def __init__(self, filepath: str, fp_relapse_criteria: str, fp_depression_criteria: str):
-#         self.DEPRESSION_POLL_OPTIONS = None
-#         self.RELAPSE_POLL_OPTIONS = None
-#         self.DB_client = None  # SQLiteClient(filepath)
-#         self.fp_relapse_criteria = fp_relapse_criteria
-#         self.fp_depression_criteria = fp_depression_criteria
-#
-#     def update_day(self, user_id: str, curr_day: int, curr_date):
-#         self.DB_client.execute_DML_command(self.UPDATE_DAY, (curr_day, curr_date, user_id))
-#
-#     def return_day(self, user_id):
-#         return self.get_user(user_id)[5:]
-
-
 class DBAccessManager:
-    __slots__ = ("db_client", "RELAPSE_POLL_OPTIONS", "DEPRESSION_POLL_OPTIONS")
+    __slots__ = ("db_client", "RELAPSE_POLL_OPTIONS", "DEPRESSION_POLL_OPTIONS", "DRINKS_PERCENTAGE")
 
-    def __init__(self, fp_relapse_criteria: str, fp_depression_criteria: str, db_client: PSQLClient):
+    def __init__(self,
+                 fp_relapse_criteria: str,
+                 fp_depression_criteria: str,
+                 fp_drinks_percentage: str,
+                 db_client: PSQLClient):
         self.db_client = db_client
         try:
             with open(fp_relapse_criteria) as fr:
@@ -66,8 +24,9 @@ class DBAccessManager:
             with open(fp_depression_criteria) as fr:
                 lines = fr.readlines()
                 self.DEPRESSION_POLL_OPTIONS = [list(option_string.rsplit(maxsplit=1)) for option_string in lines]
+            self.DRINKS_PERCENTAGE = json.loads(open(fp_drinks_percentage).read())
         except Exception as err:
-            raise Exception("Poll options files are unavailable")
+            raise Exception("Resource files are unavailable: ", err)
 
     def get_user(self, id: int):
         users_info = self.db_client.execute_DQL_command(f"""
@@ -110,7 +69,7 @@ class DBAccessManager:
                 groups_counter[int(self.RELAPSE_POLL_OPTIONS[ans][1])] += 1
         return "".join([str(cntr) for cntr in groups_counter])
 
-    def create_statistics(self, user_id: int):
+    def create_poll_statistics(self, user_id: int):
         dp_answers = self.db_client.execute_DQL_command("""
                     SELECT answers
                     FROM depression_poll
@@ -121,6 +80,9 @@ class DBAccessManager:
                     FROM relapse_poll
                     WHERE user_id = %s;
                 """, (user_id,))
+        if not (dp_answers and rl_answers):
+            return None
+
         dp_points = []
         rl_points = []
         for test_result in dp_answers:
@@ -141,7 +103,7 @@ class DBAccessManager:
                            color=colors[i],
                            label=labels[i])
             axis1.plot(array(list(range(1, len(dp_points) + 1))),
-                       array([sum(int(c) for c in point) for point in dp_points]),
+                       array([sum([int(point[0][i]) for i in range(3)]) for point in dp_points]),
                        color='k',
                        linestyle="-",
                        linewidth="4",
@@ -153,7 +115,7 @@ class DBAccessManager:
                            color=colors[i],
                            label=labels[i])
             axis2.plot(array(list(range(1, len(rl_points) + 1))),
-                       array([sum(int(c) for c in point) for point in rl_points]),
+                       array([sum([int(point[0][i]) for i in range(3)]) for point in rl_points]),
                        color='k',
                        linestyle="-",
                        linewidth="4",
@@ -168,6 +130,60 @@ class DBAccessManager:
         axis2.set_title(label="Relapse factors tracker")
         axis2.legend(loc="upper right", fontsize=8)
         figure.tight_layout()
+
+        bytes_io = BytesIO()
+        plt.savefig(bytes_io)
+        bytes_io.seek(0)
+        image = Image.open(bytes_io)
+
+        return image
+
+    def update_month_calendar(self, user_id: int, day: datetime.date, dose_string: str):
+        ethanol_equivalent = self.__calculate_dose(dose_string)
+        self.db_client.execute_DML_command(
+            """
+            INSERT INTO month_statistics (user_id, day, ethanol_equivalent)
+            VALUES (%s, %s, %s);
+            """, (user_id, day, ethanol_equivalent))
+        self.db_client.execute_DML_command(
+            """
+            DELETE FROM month_statistics
+            WHERE user_id = %s AND day < %s - '1 month'::interval;
+            """, (user_id, day)
+        )
+
+    def __calculate_dose(self, dose_string: str):
+        day_drinks_and_doses = {}
+        for str_drink in dose_string.split(sep=','):
+            ml, type_of_drink = str_drink.split(maxsplit=1)
+            day_drinks_and_doses[type_of_drink.lower()] = int(ml)
+
+        sum_of_ethanol = 0.0
+        for type_of_drink, ml in day_drinks_and_doses.items():
+            sum_of_ethanol += float(int(ml) / 100 * self.DRINKS_PERCENTAGE[type_of_drink])
+
+        return sum_of_ethanol
+
+    def create_dose_statistics(self, user_id: int):
+        user_doses = self.db_client.execute_DQL_command("""
+            SELECT day, ethanol_equivalent
+            FROM month_statistics
+            WHERE user_id = %s
+            ORDER BY day;
+        """, (user_id,))
+        if not user_doses:
+            return None
+
+        use("Agg")
+
+        doses_per_day = array([day_stat[1] for day_stat in user_doses])
+        dates = array(["{}, {}".format(str(day_stat[0].day), day_stat[0].strftime("%a")) for
+                       day_stat in user_doses])
+
+        plt.bar(x=dates, height=doses_per_day, label="Ethanol equivalent per day.")
+        plt.title("Ethanol consumption in " + user_doses[0][0].strftime("%B"))
+        plt.ylabel("ml")
+        plt.xticks(rotation=30)
 
         bytes_io = BytesIO()
         plt.savefig(bytes_io)

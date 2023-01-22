@@ -1,5 +1,6 @@
 from datetime import datetime
-from my_bot import bot, ADMIN_CHAT_ID
+from config import ADMIN_CHAT_ID
+from handlers import bot
 
 
 if __name__ == "__main__":
@@ -8,5 +9,4 @@ if __name__ == "__main__":
             bot.start_polling()
         except Exception as error:
             bot.telegram_client.post(method="sendMessage", params={"chat_id": ADMIN_CHAT_ID,
-                                                                   "text": f"{datetime.now()}: {error.__class__}"})
-            pass
+                                                                   "text": f"{datetime.now()}: {error}"})

@@ -1,0 +1,20 @@
+{
+  "beer": 5,
+  "wine": 12,
+  "champagne": 13,
+  "vodka": 40,
+  "gin": 42,
+  "whiskey": 40,
+  "liquer": 20,
+  "tequila": 50,
+  "rum": 42,
+  "vermouth": 15,
+  "fortified wine": 16,
+  "malt beverage": 15,
+  "absent": 70,
+  "brandy": 42,
+  "jagermeister": 35,
+  "schnapps": 35,
+  "irish coffee": 9,
+  "martini": 15
+}

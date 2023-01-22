@@ -24,7 +24,6 @@ class ModelClient:
             train_model(fp_to_model, fp_to_intents)
             print("Model saved successfully")
 
-    def set_up(self):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
         data = torch.load(self.fp_to_model)
@@ -58,4 +57,4 @@ class ModelClient:
                 if tag == intent["tag"]:
                     return random.choice(intent['responses'])
         else:
-            return "Не совсем поняла :(\nМожете, пожалуйста, переформулировать?"
+            return "I did not understand your message :(\nCould you please rephrase it?"

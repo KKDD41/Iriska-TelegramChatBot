@@ -3,165 +3,163 @@
     {
       "tag": "recognition",
       "patterns": [
-        "Как распознать страдает ли близкий человек алкоголизмом?",
-        "Как понять что я болен алкоголизмом?",
-        "Как понять что у меня алкогольная зависимость?",
-        "Критерии алкоголизма",
-        "Как понять что я зависимый?",
-        "В чем причина пьянства и алкоголизма?",
-        "Кто такой алкоголик?",
-        "Каковы признаки алкоголизма?",
-        "Я алкоголик, если пью по выходным?",
-        "Я зависимый от алкоголя, если пью по один раз в неделю?",
-        "Что такое алкоголизм?",
-        "Являюсь ли я алкозависимым?",
-        "Как понять, что человек алкозависимый?",
-        "Какая норма алкоголя в неделю? в месяц? в день?",
-        "Я зависимый?",
-        "Как понять, стал ли алкоголь проблемой?"
+        "How to recognize if a loved one suffers from alcoholism?",
+        "How do I know if I'm an alcoholic?",
+        "How do I know if I'm addicted to alcohol?",
+        "Criteria of alcoholism",
+        "How do I know if I'm addicted?",
+        "What is the cause of drunkenness and alcoholism?",
+        "Who is an alcoholic?",
+        "What are the signs of alcoholism?",
+        "Am I an alcoholic if I drink on weekends?",
+        "Am I addicted to alcohol if I drink once a week?",
+        "Am I alcoholic?",
+        "What is alcoholism?",
+        "How to understand that a person is alcohol addicted?",
+        "What is the rate of alcohol per week? per month? per day?",
+        "Am I addicted?",
+        "How do you know if alcohol has become a problem?"
       ],
-      "responses": [
-        "Journal of the American Medical Association определяет алкоголизм как первичное, хроническое заболевание, характеризующееся нарушением контроля над приёмом спиртного, пристрастием к алкоголю, употреблением алкоголя, несмотря на отрицательные последствия, и искажением мышления. Наиболее простая дифференциация алкоголизма основывается на присутствии клинических и психических признаков алкогольной зависимости (Исключительно врачом-специалистом), а также частоте и количестве употребляемого алкоголя. Различают следующие группы лиц:\n\nЛица, не употребляющие алкоголь\nЛица, умеренно потребляющие алкоголь\nЛица, злоупотребляющие алкоголем (развитие алкогольной зависимости)\nБез признаков алкоголизма\nС начальными признаками алкоголизма (утрата ситуационного и дозового контроля, запои)\nС выраженными признаками алкоголизма (регулярные запои, поражение внутренних органов, психические нарушения, свойственные алкоголизму).\n1 стадия характеризуется наличием слабой психологической зависимости. Если человек не имеет доступа к спиртному, зависимость медленно сходит на нет, но при наличии средств он непременно приобретет себе дозу этанола. Видимых физических патологий на первой стадии болезни не наблюдается – лишь легкое пристрастие, характеризующееся желанием выпить на выходных, сопроводить спиртным встречу друзей или разбавить некоторой дозой алкоголя одиночество.\n 2 стадия характеризуется навязчивым желанием пить спиртное. Психологическая зависимость становится неизбывной – даже в отвлеченном на работу или другие дела состоянии больной думает о том, как было бы неплохо выпить (и зачастую живет в ожидании этого момента).Увеличивается толерантность к алкоголю.\n3 стадия характеризуется появлением абстинентного синдрома у пьющего. Зависимость на психологическом уровне перерастает в физическую: принимаемый алкоголь блокирует выработку многих естественных гормонов, из-за чего больной уже не может перестать пить.При принудительном прекращении запоя у больного возникают симптомы, напоминающие наркотическую «ломку» и характеризующиеся «синдромом отказа»."
-      ]
+      "responses": ["Alcoholism, also known as alcohol use disorder (AUD), is a condition characterized by a physical and psychological dependence on alcohol. People with alcoholism have a strong craving for alcohol and continue to drink despite experiencing negative consequences, such as problems with their relationships, work, or health. There are several signs that a person may be struggling with alcohol addiction, including: drinking more or for a longer period of time than intended, difficulty cutting down or stopping drinking, spending a lot of time drinking or recovering from the effects of alcohol, giving up important activities in order to drink, continued drinking despite knowing it is causing problems, experiencing withdrawal symptoms when not drinking, tolerance, needing more alcohol to feel the effects. The recommended maximum safe limits for alcohol consumption are different for men and women. According to the National Institute on Alcohol Abuse and Alcoholism (NIAAA), men should not exceed 14 drinks per week, and no more than 4 drinks per day; for women, the recommendations are no more than 7 drinks per week, and no more than 3 drinks per day. One standard drink contains 14 grams of pure alcohol, which is equivalent to: 12 ounces of beer (5% alcohol content), 5 ounces of wine (12% alcohol content), 1.5 ounces of distilled spirits (40% alcohol content). It's important to note that these limits are based on averages and risk factors such as family history, medications, and mental health conditions can increase the risk of harm even at lower levels of consumption."]
     },
     {
       "tag": "treatment",
       "patterns": [
-        "Как лечить зависимость от алкоголя?",
-        "Как начать лечить алкоголизм?",
-        "Как избавиться от зависимости?",
-        "Можно ли резко бросать пить?",
-        "Что делать с алкогольной зависимостью?",
-        "Какие методы лечения работают?",
-        "Что делать если хочешь бросить пить?",
-        "Что надо делать чтобы избавиться от зависимости?"
+        "How to Treat Alcohol Addiction?",
+        "How to start treating alcoholism?",
+        "How to get rid of addiction?",
+        "Is it possible to abruptly stop drinking?",
+        "What to do with alcohol addiction?",
+        "What treatments work?",
+        "What to do if you want to stop drinking?",
+        "What should be done to get rid of addiction?"
       ],
       "responses": [
-        "Синдром зависимости от алкоголя (F10.2) (А-зависимость) включает патологическое\nупотребление алкоголя, которое приводит к нарушению социального и профессионального\nфункционирования. Патологическое употребление выражается в невозможности остановиться и прекратить алкоголизацию, несмотря на связанные с ней соматические нарушения. Чтобы нормально функционировать, А-зависимым необходимо пить ежедневно или\nзапоями. А-зависимость диагностируется при наличии либо возрастающей толерантности,\nлибо абстинентного синдрома. Под толерантностью понимают потребность в возрастающих количествах алкоголя для достижения желаемого эффекта.\n\nТечение алкоголизма подразделяется на 3 стадии.\n\nI стадия. Характерны яркие положительные воспоминания об алкоголизации, переход\nк крепким напиткам, постоянный настрой на алкоголь, трудность отказа от него. Больной торопится принять новую дозу, утрачивает контроль над ней. Начинает\nвыпивать до и после разного рода мероприятий, импульсивно, тайно, для эмоционального\nили физического облегчения. Он отменяет свои планы в связи с выпивкой; делает запасы\nспиртного, при этом избегает разговоров об употреблении алкоголя. Эйфория становится\nзапаздывающей или появляется на высоких дозах, повышается переносимость, исчезает\nрвотный рефлекс и необходимость закусывать. После алкоголизации наблюдается прерывистый сон и раннее пробуждение в астении. В ситуации отсутствия выпивки появляется чувство дискомфорта.\n\nII стадия. Появляются ложные запои или постоянное злоупотребление алкоголем.\nФормируется абстинентный синдром, резко обостряется влечение к алкоголю, прием которого купирует похмелье – т. е. наступает физическая зависимость от алкоголя. Снижается общий тонус, понижается аппетит; на фоне ослабления либидо и потенции возникают идеи ревности. Больной начинает лгать по поводу употребления алкоголя, скрывает\nисточник потребления, придумывает ложные причины алкоголизации, пренебрегает личными отношениями, пьет в одиночку. Заостряются преморбидные личностные особенности. Появляются вспышки агрессивности, беспричинная обидчивость, попытки произвести\nвпечатление, быть внушительным. Наблюдается частая смена места работы, потеря работы.\nВозникает чувство вины, появляются первые попытки воздержания, контроля количества и\nчастоты потребления алкоголя.\n\nIII стадия. Снижается толерантность к алкоголю, больные переходят на слабые\nнапитки и небольшие дозы, употребляют суррогаты. Возникают истинные запои или сохраняется постоянное злоупотребление алкоголем. Наступает алкогольная деградация личности (аморальность, растормаживание низших влечений, ухудшение памяти и интеллекта).Алкоголь употребляется рано утром, имеют место длительные запои, теряется работоспособность, ухудшается здоровье. Больной пьет с людьми более низкого социального положения, теряет друзей, семью. Он испытывает необоснованные страхи, постоянное чувство\nраскаяния, получает лечение в наркологическом стационаре. Во многих случаях исчезает\nкритика к наличию алкоголизма."
+        "Treatment for alcohol addiction typically involves a combination of different approaches, including:\n\nDetoxification: The first step in treating alcohol addiction is to undergo a medical detox, during which the body rids itself of the alcohol and any associated toxins. This process can be done in a hospital or detox center, where a person will be monitored by medical professionals to ensure their safety and comfort.\n\nTherapy: Behavioral therapies such as cognitive-behavioral therapy, motivational interviewing, and family therapy are effective in treating alcohol addiction. These therapies can help a person understand the underlying causes of their addiction and develop strategies to overcome it.\n\nMedications: Medications such as naltrexone, acamprosate, and disulfiram can help reduce cravings and prevent relapse. These medications work by altering the brain's response to alcohol and making it less pleasurable to consume.\n\nSupport groups: Support groups such as Alcoholics Anonymous (AA) and SMART Recovery are an essential part of the recovery process. They provide a sense of community, mutual support, and an opportunity to share experiences and challenges with others who are going through similar struggles.\n\nRehabilitation: Rehabilitation centers offer a more intensive and structured treatment program for people with alcohol addiction. Rehabilitation centers typically provide a combination of therapy, counseling, and support groups, along with medical treatment and monitoring.\n\nAftercare: Aftercare programs are designed to help people maintain their sobriety and prevent relapse after they complete a treatment program. Aftercare can include therapy, counseling, support groups, and medication management, as well as regular check-ins with a healthcare provider.\n\nIt is important to note that alcohol addiction is a chronic disease and it requires a long-term commitment to treatment and recovery. The road to recovery can be challenging, but with the right support, people with alcohol addiction can achieve and maintain lasting sobriety."
       ]
     },
     {
       "tag": "close person",
       "patterns": [
-        "Что делать, если клиент не хочет лечиться, а семья хочет его лечить?",
-        "Как заставить человека лечиться, пройти реабилитацию, закодироваться?",
-        "Мой близкий человек пьет, алкоголик",
-        "Как помочь пьющему человеку, если он этого не хочет?",
-        "Что делать если человек не осознает что он болен?",
-        "Как же строить свои отношения с человеком, если он страдает алкогольной болезнью, зависимостью?",
-        "как помочь самому себе, если пьет близкий человек?",
-        "Как разговаривать с алкоголиком?",
-        "У меня друг пьет, что делать?",
-        "Как заставить близкого человека бросить пить?",
-        "Как помочь избавиться от зависимости?"
+        "What if the client does not want to be treated, but the family wants to treat him?",
+        "How to force a person to be treated, undergo rehabilitation, encode?",
+        "My loved one drinks, is an alcoholic",
+        "How to help a drunk person if he does not want it?",
+        "What to do if a person does not realize that he is sick?",
+        "How to build your relationship with a person if he suffers from an alcoholic disease, addiction?",
+        "how to help yourself if a loved one drinks?",
+        "How to talk to an alcoholic?",
+        "My friend drinks, what should I do?",
+        "How to make a loved one stop drinking?",
+        "How to help get rid of addiction?"
       ],
       "responses": [
-        "Содействие проблеме означает, что вы делаете вещи, которые на первый взгляд могут выглядеть как желание помочь, однако на самом деле своим поведением вы способствуете сохранению зависимости у близкого человека (чрезмерная опека, самообвинение или обвинение зависимого, скрытность). В действительности это означает, что вам проще поддаться настроениям, угрозам и манипуляциям окружающих, и вас пугает мысль о том, что придется устанавливать границы и настаивать на своем. Вы боитесь, что если не выполнить требования зависимого человека, в отместку он станет вести себя еще более непредсказуемо. Вы боитесь, что он может бросить вас или закончить свои дни на улице. И вы напрягаетесь до последнего, чтобы этого не произошло.\nК сожалению, от таких усилий очень мало, или вообще нет толку.\n\nЧтобы изменить собственное поведение, зависимый человек должен понять, что ему действительно есть, что терять. Если он не столкнется лицом к лицу с последствиями своих поступков, он не найдет мотивации для изменения собственного поведения. \n\nГлавное для Вас сейчас - быть полностью открытым, если человек обратиться к Вам за помощью с желанием бросить пить. Первое, что необходимо сделать - это поход к врачу-наркологу, а также консультация для предотвращения симптомов алкогольного делирия.\n\nЕсли алкоголик отверг три или более совета, вы занимаетесь Спасением. Не отнимайте спиртное, не выливайте его и не пытайтесь опустошить тайники, если только вас не попросит об этом сам алкоголик. И наоборот, никогда не покупайте алкоголику спиртные напитки,\nне приготавливайте их для него, не подавайте и не предлагайте ему алкоголь. Не вступайте в затяжные разговоры об алкоголизме и связанных с ним проблемах в тот момент, когда человек пьян или выпивает.\nНикогда не одалживайте денег пьющему алкоголику. Не разрешайте пьяному алкоголику являться в ваш дом или, что еще хуже, пить в вашем доме. Вместо этого по возможности ласково и участливо попросите его прийти снова,\nкогда он будет трезв. Если алкоголик не принимает активного участия в борьбе со своим алкоголизмом, никогда не выполняйте его поручений, не делайте за него работу по дому, не подвозите его на машине и не доставляйте\nему покупок. Свободно высказывайте чувства, которые вызывает у вас пьянство алкоголика, свои пожелания в связи с этим. Не ожидайте от него благодарности за свою откровенность или немедленных\nизменений. Скорее вы услышите шквал самооправданий и упреков в ваш адрес. Не делайте для алкоголика ничего, что противоречило бы вашим желаниям. Ни в коем случае не считайте алкоголика безнадежным. Когда вы видите\nподлинный интерес и усилия с его стороны, предлагайте свою помощь. Однако не проявляйте излишнего рвения, делайте только то, что вам хочется, не беря на себя чужую ответственность."
-      ]
-    },
-    {
-      "tag": "relapse",
-      "patterns": [
-        "я снова запил",
-        "я набухался, у меня опять запой",
-        "я опять запил",
-        "у меня начался запой",
-        "я сорвался и опять запил",
-        "я снова в запое",
-        "у меня произошел срыв",
-        "помоги, я опять нажрался",
-        "я снова выпил",
-        "я набухался, запил и опять в говно",
-        "я пьяный, я сегодня напился",
-        "опять сорвался, мне очень плохо",
-        "я в зюзю пьяный",
-        "опять выпил, чувствую себя плохои очень хуево",
-        "я снова сорвался"
-      ],
-      "responses": [
-        "При алкоголизме часто имеют место рецидивы. В течение первого года терапии рецидивы наблюдаются в 75 % случаев, так что в этом нет ничего страшного. Если вы увидели симптомы срыва себя, если близкий человек начал вновь злоупотреблять, желательно выяснить, что было причиной рецидива, чтобы решить эту проблему.\nОбратиться повторно в квалифицированную клинику, где в штате есть врач нарколог и психиатр. Если причиной рецидива стало неадекватно проведенное лечение, стоит обратиться к другому специалисту.\nСрыв в зависимости – не приговор. Многим приходиться пройти этот путь. \n\nЕсли рецедив случился у Вас, стоит связаться с близким, который сможет Вам помочь. Самое главное сейчас - не оставаться одному."
+        "Helping a close person with an alcohol addiction can be challenging, but there are several steps you can take to support them:\n\nEncourage them to seek professional help: Encourage your loved one to seek help from a healthcare professional, such as a doctor or therapist, who can provide guidance and resources for addiction treatment.\n\nBe supportive: Let your loved one know that you care about them and that you are there to support them. Listen to them and try to understand what they are going through.\n\nSet boundaries: It's important to set boundaries with your loved one to protect yourself and your own well-being. Communicate clearly what you will and will not tolerate when it comes to their alcohol use.\n\nHelp them with practical tasks: Offer to help your loved one with practical tasks, such as running errands, cooking meals or other daily activities.\n\nEncourage them to join a support group: Consider encouraging your loved one to join a support group, such as Alcoholics Anonymous, which can provide them with a sense of community and a space to talk about their struggles with addiction.\n\nAvoid enabling: It's important to avoid enabling your loved one by continuing to provide them with money, a place to live, or other resources that they could use to support their addiction.\n\nIt's important to remember that addiction is a complex condition that requires professional help and support. Be patient and consistent in your support, and encourage your loved one to seek help as soon as possible."
       ]
     },
     {
       "tag": "store assistant",
       "patterns": [
-        "Я в магазин зашел",
-        "Собираюсь за продуктами",
-        "Заскочу в магазин",
-        "Пойду в продуктовый",
-        "Зайду в ларек",
-        "Уже в магазе",
-        "Я в магазин иду, пошел",
-        "Собираюсь в магаз, магазин",
-        "Иду за покупками",
-        "Зайду в магазин",
-        "Я пошел за продуктами"
+        "I went to the store",
+        "Getting groceries",
+        "I'm going to the store",
+        "I'm going to the grocery store",
+        "I'll go to the stall",
+        "Already in the store",
+        "I'm going to the store",
+        "I went to shop",
+        "I'm going to the store, store",
+        "I'm going shopping",
+        "I'm going to the store",
+        "I went for groceries",
+        "I'm heading to the store.",
+        "I'm off to the shop.",
+        "Gonna hit up the store.",
+        "Going to grab some things from the shop.",
+        "Heading out to the store real quick.",
+        "I'll be back, just going to the shop.",
+        "Bouncing to the store.",
+        "Going to get something from the shop",
+        "Just popping out to the store",
+        "I'm taking a trip to the shop",
+        "I'll be back soon, going to the store",
+        "I'm on my way to the shop",
+        "Going to run some errands at the store",
+        "Off to do some shopping",
+        "I'll be back, just going to the store for some things"
       ],
       "responses": [
-        "Отлично! Помните, что Вы отлично справляетесь.",
-        "Хорошо! Надеюсь Вы помните, что в алкогольном отделе Вам ничего не надо?",
-        "Алкогольный отдел лучше обойдите стороной, потом на сэкономленные деньги порадуете себя чем-то более полезным.",
-        "Ничего из спиртного Вам точно не надо, даже \"одной баночки\". Вы и без этого отлично справляетесь!",
-        "Хорошо! Можете записать сюда список покупок, которые хотели купить изначально, и придерживайтесь только его.",
-        "Отлично, я рядом. Если понадобится помощь или станет некомфортно, напишите.",
-        "Можете оставить у меня список продуктов которые нужны. Так будет легче не взять лишнего :)"
+        "Excellent! Remember that you are doing a great job.",
+        "Good! I hope you remember that you don't need anything in the alcohol department?",
+        "It's better to bypass the alcohol department, then treat yourself to something more useful with the money saved.",
+        "You definitely don't need any of the alcohol, not even \"one jar \". You can do just fine without it!",
+        "Good! You can write down here the list of purchases that you originally wanted to buy, and stick to it.",
+        "Great, I'm here. If you need help or feel uncomfortable, write.",
+        "You can leave me a list of products that you need. It will be easier not to take too much :)"
       ]
     },
     {
       "tag": "greeting",
       "patterns": [
-        "Здравствуй",
-        "Здравствуйте!",
-        "Добрый день!",
-        "Доброе утро!",
-        "Добрый вечер!",
-        "Приветствую вас",
-        "Привет",
-        "Приветик",
-        "Хай",
-        "Доброго времени суток",
-        "Салют",
-        "Здарова",
-        "Дороу",
-        "Приветули",
-        "Вечер в хату"
+        "Good day",
+        "Salute",
+        "Hey Ya",
+        "Greetings",
+        "Hi",
+        "Hi there",
+        "Hey",
+        "Heya",
+        "Morning",
+        "Afternoon",
+        "Evening",
+        "sup",
+        "What's up?",
+        "Yo",
+        "Hello!",
+        "Hi there",
+        "Good morning",
+        "Good afternoon",
+        "Good evening",
+        "It’s nice to meet you",
+        "It’s a pleasure to meet you"
       ],
       "responses": [
-        "И Вам здравствуйте",
-        "Здравствуйте, рада Вас слышать",
-        "Доброго времени суток!",
-        "Здравствуйте! Как Ваши дела?",
-        "Рада Вас слышать! Все ли в порядке?",
-        "Здравствуйте! Как Ваше самочувствие?",
-        "Доброго времени суток! Как Вы?"
+        "Hello to you, too",
+        "Hello, nice to hear you",
+        "Good day!",
+        "Hello, how are you?",
+        "I'm glad to hear you! Is everything ok?",
+        "Hello! How are you feeling?",
+        "Good afternoon! How are you?",
+        "What can I do for you today?",
+        "How may I assist you?",
+        "What brings you here?",
+        "What can I help you with?"
       ]
     },
     {
       "tag": "thanks",
       "patterns": [
-        "Спасибо",
-        "Спасибо большое",
-        "Огромное спасибо",
-        "Благодарю",
-        "Без Вас я бы не справился",
-        "Очень обязан",
-        "Не знаю, чтобы я делал без Вас",
-        "Спасибо за все",
-        "Буду обязан",
-        "Мерси",
-        "Благодарствую",
-        "спс",
-        "спасибки",
-        "мерси",
-        "дзякую",
-        "Спасибо за помощь",
-        "Большое спасибо за понимание",
-        "Благодарю за поддержку"
+        "Thank you",
+        "Thanks a lot",
+        "Thanks a lot",
+        "Thanks to",
+        "I couldn't have done it without you",
+        "Very obligated",
+        "I don't know what I would do without you",
+        "Thanks for all",
+        "I will be obliged",
+        "Mercy",
+        "THX",
+        "merci",
+        "Thanks for the help",
+        "Thank you very much for your understanding",
+        "Thanks for support"
       ],
       "responses": [
-        "Рада помочь!",
-        "Обращайтесь, я всегда тут",
-        "Пожалуйста! Берегите себя"
+        "Glad to help!",
+        "Do not hesitate to contact me anytime, I'm always here",
+        "You're welcome! Take care of yourself"
       ]
     }
   ]
