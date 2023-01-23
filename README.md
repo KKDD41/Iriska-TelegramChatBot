@@ -18,3 +18,4 @@ Iriska is a powerful tool that can help users in their recovery journey, providi
 ![kek](readme_screenshots/poll_statistics.png)
 ![kek](readme_screenshots/poll_statistics_rldp.png)
 ![kek](readme_screenshots/conversation_example.png)
+![kek](readme_screenshots/database.png)
