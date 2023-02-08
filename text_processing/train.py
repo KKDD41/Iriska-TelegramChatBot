@@ -3,8 +3,8 @@ import json
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
-from nlp_utils import bag_of_words, tokenize, stem, ignore_words
-from nlp_model import NeuralNet
+from .nlp_utils import bag_of_words, tokenize, stem, ignore_words
+from .nlp_model import NeuralNet
 
 
 class ChatDataset(Dataset):

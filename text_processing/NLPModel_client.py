@@ -2,9 +2,9 @@ import random
 import json
 import torch
 import os
-from nlp_model import NeuralNet
-from nlp_utils import bag_of_words, tokenize
-from train import train_model
+from .nlp_model import NeuralNet
+from .nlp_utils import bag_of_words, tokenize
+from .train import train_model
 
 
 class ModelClient:

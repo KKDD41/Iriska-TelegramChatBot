@@ -1,4 +1,8 @@
 import numpy as np
+import nltk
+
+nltk.download('punkt')
+
 from nltk import word_tokenize
 from nltk.stem.snowball import SnowballStemmer
 

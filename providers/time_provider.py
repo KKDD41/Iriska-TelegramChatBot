@@ -1,7 +1,8 @@
 import datetime
 import schedule
 from time import sleep
-from clients import PSQLClient, TelegramClient
+from .clients.telegram_client import TelegramClient
+from .clients.SQL_client import PSQLClient
 
 
 class AlarmsManager:

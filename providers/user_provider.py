@@ -1,6 +1,6 @@
 import datetime
 import json
-from clients import PSQLClient
+from .clients.SQL_client import PSQLClient
 from matplotlib import use
 import matplotlib.pyplot as plt
 from numpy import array
