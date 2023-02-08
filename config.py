@@ -3,9 +3,9 @@ from providers import AlarmsManager, PSQLClient, TelegramClient, DBAccessManager
 from text_processing import ModelClient
 
 
-host = "127.0.0.1"
+host = os.environ["HOST"]
 user = "postgres"
-password = "kate2003"
+password = os.environ["DB_PASSWORD"]
 db_name = "iriska_database"
 
 TOKEN = os.environ["TELEGRAM_TOKEN"]
