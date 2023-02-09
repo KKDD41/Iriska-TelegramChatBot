@@ -1,6 +1,6 @@
 import os
-from providers import AlarmsManager, PSQLClient, TelegramClient, DBAccessManager
-from text_processing import ModelClient
+from providers import *
+from text_processing import *
 
 
 host = os.environ["HOST"]
