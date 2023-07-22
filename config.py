@@ -3,13 +3,14 @@ from providers import *
 from text_processing import *
 
 
-host = os.environ["HOST"]
-user = "postgres"
-password = os.environ["DB_PASSWORD"]
-db_name = "iriska_database"
+host = os.environ.get('DB_HOSTT')
+user = os.environ.get('DB_USER')
+password = os.environ.get('DB_PASSWORD')
+port = os.environ.get('DB_PORT')
+db_name = os.environ.get('DB_NAME')
 
-TOKEN = os.environ["TELEGRAM_TOKEN"]
-ADMIN_CHAT_ID = os.environ["ADMIN_CHAT_ID"]
+TOKEN = os.environ.get("TELEGRAM_TOKEN")
+ADMIN_CHAT_ID = os.environ.get("ADMIN_CHAT_ID")
 
 bot_commands = """hello - register to get access to main functions
 new_alarm - create custom text reminder, format "hh:mm NOTIFICATION MESSAGE"
